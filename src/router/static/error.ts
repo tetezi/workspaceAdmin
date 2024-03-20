@@ -1,9 +1,6 @@
-import { RouterView } from "vue-router";
-
 export default {
   path: "/:path(.*)*",
   redirect: "404",
-  // component: () => <RouterView></RouterView>,
   children: [
     {
       path: "401",
