@@ -1,8 +1,10 @@
 <template>
-  <RouterView></RouterView>
+  <el-config-provider :locale="zhCn">
+    <router-view></router-view>
+  </el-config-provider>
 </template>
 <script lang="tsx" setup>
-import { RouterView } from "vue-router";
 import { useTitle } from "./hooks/useTitle";
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 useTitle()
 </script>
