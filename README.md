@@ -1,39 +1,40 @@
 # workspaceAdmin
 
-This template should help get you started developing with Vue 3 in Vite.
+#### 介绍
 
-## Recommended IDE Setup
+- `feat` 增加新功能
+- `fix` 修复问题/BUG
+- `style` 代码风格相关无影响运行结果的
+- `perf` 优化/性能提升
+- `refactor` 重构
+- `revert` 撤销修改
+- `test` 测试相关
+- `docs` 文档/注释
+- `chore` 依赖更新/脚手架配置修改等
+- `types` 类型定义文件更改
+- `wip` 开发中
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+#### 使用说明
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+- 运行
 
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+- 构建应用
 
-```sh
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+- 本地测试应用
 
-```sh
-npm run lint
+```bash
+npm run build
+npm run preview
 ```
