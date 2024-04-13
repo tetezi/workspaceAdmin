@@ -1,7 +1,7 @@
-<script setup lang="ts">
-</script>
+<template></template>
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
 
-<template>
-  <main>
-  </main>
-</template>
+const router = useRouter();
+console.log(router.getRoutes())
+</script>
