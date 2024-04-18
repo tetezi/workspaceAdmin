@@ -3,21 +3,12 @@ import { merge } from "lodash";
 import { VAXios } from "./axios";
 import type { RequestOptions } from "./type";
 
-export enum ContentTypeEnum {
-  // json
-  JSON = "application/json;charset=UTF-8",
-  // form-data qs
-  FORM_URLENCODED = "application/x-www-form-urlencoded;charset=UTF-8",
-  // form-data  upload
-  FORM_DATA = "multipart/form-data;charset=UTF-8",
-}
 export function createAxios(
   axiosConfig: AxiosRequestConfig,
   requestOptions: Partial<RequestOptions> = {}
 ) {
   const defAxiosConfig: AxiosRequestConfig = {
     timeout: 10 * 1000,
-    headers: { "Content-Type": ContentTypeEnum.JSON },
   };
 
   const defRequestOptions: RequestOptions = {
@@ -30,6 +21,8 @@ export function createAxios(
     },
     errorMessageMode: "message",
     checkStatusCode: undefined,
+    contentType: "FORM",
+    withToken: true,
   };
   return new VAXios(
     merge(defAxiosConfig, axiosConfig),

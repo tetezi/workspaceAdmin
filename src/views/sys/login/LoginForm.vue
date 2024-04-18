@@ -6,9 +6,12 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { PAGE } from '@/router/constant';
 import { useUserStore } from '@/stores/modules/user';
 import { BasicButton, useForm } from 'ttz-ui';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const userStore = useUserStore()
 const [FormComponent, formMethods] = useForm({
     formSchemas: [
@@ -20,8 +23,9 @@ const [FormComponent, formMethods] = useForm({
         },
     ],
     submitApi: userStore.login,
-    onSubmit: (params, resutl) => {
-        console.log(11, params, resutl)
+    onSubmit: () => {
+        console.log(router)
+        router.replace(PAGE.home)
     }
 }) 
 </script>

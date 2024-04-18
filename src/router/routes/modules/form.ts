@@ -1,10 +1,20 @@
+import { LAYOUT } from "../../constant";
+
 export default {
   path: "/form",
+  component: LAYOUT,
   children: [
     {
       path: "designer",
       name: `designer`,
+      // component: () => import("@/views/sys/form/designer/SqlDesigner.vue"),
       children: [
+        // {
+        //   path: "index",
+        //   name: `index`,
+        //   alias: "/form/designer",
+        //   component: () => import("@/views/sys/form/designer/SqlDesigner.vue"),
+        // },
         {
           path: "data",
           name: `dataDesigner`,

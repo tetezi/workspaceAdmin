@@ -6,10 +6,10 @@ import CryptoJS from "crypto-js";
 type UserInfo = {
   userId: UUID;
   userNo: string;
-  userName: string;
+  name: string;
 };
 type State = {
-  userInfo?: UserInfo;
+  user?: UserInfo;
   token?: string;
 };
 export const useUserStore = defineStore({
@@ -21,9 +21,13 @@ export const useUserStore = defineStore({
     },
   ],
   state: (): State => {
-    return { userInfo: undefined, token: undefined };
+    return { user: undefined, token: undefined };
   },
-  getters: {},
+  getters: {
+    getToken(state): string | undefined {
+      return state.token;
+    },
+  },
   actions: {
     async login({ userNo, password }: { userNo: string; password: string }) {
       const hashedPassword = CryptoJS.SHA256(password).toString(
@@ -31,10 +35,11 @@ export const useUserStore = defineStore({
       );
       const { accessToken, user } = await Login({
         userNo,
-        password: hashedPassword,
+        password: password,
       });
       this.token = accessToken;
-      this.userInfo = user;
+      this.user = user;
     },
+    async afterLoginAction() {},
   },
 });

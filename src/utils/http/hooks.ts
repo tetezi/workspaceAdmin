@@ -4,6 +4,7 @@ import {
   handleCheckStatusCode,
   handleErrorMessageMode,
   handleParamsSerializer,
+  handleHeaders,
   handleResponsePath,
   isCancelAxios,
 } from "./handleOptions";
@@ -14,6 +15,7 @@ export const hooks: RequestHooks = {
   beforeHooks: async (req, requestOptions) => {
     req = await handleCancelOfBefore(req, requestOptions, cancelMap);
     req = await handleParamsSerializer(req, requestOptions);
+    req = await handleHeaders(req, requestOptions);
     return req;
   },
   thenHooks: async (res, axiosConfig, requestOptions) => {

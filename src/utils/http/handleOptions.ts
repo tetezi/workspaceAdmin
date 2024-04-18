@@ -1,9 +1,18 @@
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse, Canceler } from "axios";
-import { get, isFunction, omit } from "lodash";
+import { get, set, isFunction, omit } from "lodash";
 import qs from "qs";
 import { message } from "../message";
 import type { RequestHooks, RequestOptions } from "./type";
+import { useUserStore } from "@/stores/modules/user";
+export enum ContentTypeEnum {
+  // JSON 格式的数据。
+  JSON = "application/json;charset=UTF-8",
+  // URL 编码的表单数据
+  FORM = "application/x-www-form-urlencoded;charset=UTF-8",
+  // 包含文件上传的表单数据。
+  FORM_DATA = "multipart/form-data;charset=UTF-8",
+}
 // 状态码检查
 export const handleCheckStatusCode: RequestHooks["thenHooks"] = async (
   res,
@@ -138,4 +147,19 @@ export const handleResponsePath: RequestHooks["thenHooks"] = (
 ) => {
   const { responsePath } = requestOptions;
   return responsePath ? get(res, responsePath) : res;
+};
+
+export const handleHeaders: RequestHooks["beforeHooks"] = (
+  axiosConfig,
+  requestOptions
+) => {
+  const { contentType, withToken } = requestOptions;
+  if (contentType) {
+    set(axiosConfig, ["headers", "Content-Type"], ContentTypeEnum[contentType]);
+  }
+  if (withToken) {
+    const userStroe = useUserStore();
+    set(axiosConfig, ["headers", "Access-Token"], userStroe.getToken);
+  }
+  return axiosConfig;
 };

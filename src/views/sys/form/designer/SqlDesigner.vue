@@ -1,4 +1,5 @@
 <template>
+    SqlDesigner
     <FormComponent></FormComponent>
     <BasicButton type="primary" style="width: 100%;" :func="() => formMethods.submitFunction()">提交</BasicButton>
 </template>

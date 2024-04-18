@@ -25,6 +25,8 @@ export interface RequestOptions {
     historyAxiosConfig: AxiosRequestConfig,
     currentAxiosConfig: AxiosRequestConfig
   ) => boolean;
+  contentType?: "JSON" | "FORM" | "FORM_DATA";
+  withToken?: boolean;
 }
 // axios钩子
 export interface RequestHooks {

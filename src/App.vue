@@ -6,5 +6,6 @@
 <script lang="tsx" setup>
 import { useTitle } from "./hooks/useTitle";
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-useTitle()
+import { asyncRoutes, routeModuleList } from "./router/routes";
+useTitle() 
 </script>
