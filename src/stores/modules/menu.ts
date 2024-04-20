@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { resetRouter } from "@/router";
+import { resetRouter, router } from "@/router";
 import type { RouteRecord } from "@/router/types";
 import { useRouter } from "vue-router";
 export type Menu = {
@@ -101,8 +101,12 @@ export const useMenuStore = defineStore({
       this.menuList = list;
       this.isCompleted = true;
     },
-    async initPermissionMenu() {
-      const router = useRouter();
+    clearMenuList() {
+      resetRouter();
+      this.menuList = [];
+      this.isCompleted = false;
+    }, 
+    async initPermissionMenu() {  
       // const menu = await GetPermission();
       const menu = [
         {

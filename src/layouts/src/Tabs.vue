@@ -28,7 +28,7 @@
 </template>
 <script lang="ts" setup>
 import { useTabStore } from '@/stores/modules/tabs';
-import { computed, watchEffect } from 'vue';
+import { computed, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Meta } from '@/router/types'
 import { Tabs, TabPane, Dropdown, Menu } from 'ant-design-vue'
@@ -45,8 +45,8 @@ const router = useRouter()
 const tabValue = computed({
     set: (path) => path !== route.path && router.push({ path }),
     get: () => route.path as string
-})
-watchEffect(() => {
+}) 
+watch(() => route.path, () => {
     const { path } = route
     const meta: Meta = route.meta
     if (meta.include) {
@@ -55,6 +55,8 @@ watchEffect(() => {
         })
     }
 
+},{
+    immediate:true
 })
 async function removeHandle(targetKey: any) {
     if (targetKey === route.path) {

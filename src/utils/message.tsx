@@ -58,7 +58,7 @@ export async function messageBoxConfirm(
   } = {},
   checkFunc?: () => Promise<any>
 ) {
-  const bodyLoadingRef = ref(false);
+  // const bodyLoadingRef = ref(false);
   const customStyle =
     options.customStyle || options.width
       ? {
@@ -70,7 +70,8 @@ export async function messageBoxConfirm(
   return ElMessageBox.confirm(
     () => {
       return (
-        <div v-loading={options.needBodyLoading && unref(bodyLoadingRef)}>
+       
+        <div   /* v-loading={options.needBodyLoading && unref(bodyLoadingRef)}  */ >
           {isFunction(content) ? content() : content}
         </div>
       );
@@ -84,9 +85,9 @@ export async function messageBoxConfirm(
         if (action === "confirm") {
           if (isFunction(checkFunc)) {
             instance.confirmButtonLoading = true;
-            bodyLoadingRef.value = true;
+            // bodyLoadingRef.value = true;
             await checkFunc().finally(() => {
-              bodyLoadingRef.value = false;
+              // bodyLoadingRef.value = false;
               instance.confirmButtonLoading = false;
             });
           }

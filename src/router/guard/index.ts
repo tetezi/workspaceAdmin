@@ -13,14 +13,15 @@ function createMenuGuard(router: Router) {
     const token = userStore.getToken;
     if (to.path === PAGE.login) {
       next();
+      return 
     }
     if (token) {
-      if (!menuStore.isCompleted) {
+      if (!menuStore.isCompleted) {  
         await menuStore.initPermissionMenu();
         next({ path: to.fullPath, replace: true, query: to.query });
         return;
       } else {
-        next();
+        next(); 
         return;
       }
     } else {

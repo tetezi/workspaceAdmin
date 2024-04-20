@@ -2,6 +2,11 @@ import { Login } from "@/api/sys/user";
 import { getStorageName } from "@/utils/env";
 import { defineStore } from "pinia";
 import CryptoJS from "crypto-js";
+import { useTabStore } from "./tabs";
+import { useMenuStore } from "./menu";
+import { useRouter } from "vue-router";
+import { PAGE } from "@/router/constant";
+import { router } from "@/router";
 
 type UserInfo = {
   userId: UUID;
@@ -40,6 +45,12 @@ export const useUserStore = defineStore({
       this.token = accessToken;
       this.user = user;
     },
-    async afterLoginAction() {},
+    async logout() {
+      this.user = undefined;
+      this.token = undefined;
+      useTabStore().clearTabs();
+      useMenuStore().clearMenuList();
+      router.replace(PAGE.login);
+    },
   },
 });

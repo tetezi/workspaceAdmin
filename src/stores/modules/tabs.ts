@@ -40,7 +40,12 @@ export const useTabStore = defineStore({
     setTabs(tabs: Array<Tab>) {
       this.tabs = tabs;
     },
+    clearTabs() {
+      this.tabs = [];
+      console.log('清空')
+    },
     addTab(tab: Tab, index?: number) {
+      console.log('添加',tab)
       if (this.getTabByPath(tab.path)) {
         return;
       }
