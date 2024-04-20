@@ -108,32 +108,32 @@ export const useMenuStore = defineStore({
     }, 
     async initPermissionMenu() {  
       // const menu = await GetPermission();
-      const menu = [
-        {
-          Id: "ADdawDAWD",
-          Name: "数据设计表",
-          UrlLabel: "/dataDesign1",
-          Type: "Component",
-          Url: "/sys/form/designer/DataDesigner",
-          Param: "",
-          SubMenus: [],
-        },
-        {
-          Id: "fwafaw",
-          Name: "SQL设计表",
-          UrlLabel: "/SqlDesign1",
-          Type: "Component",
-          Url: "/sys/form/designer/SqlDesigner",
-          Param: "",
-          SubMenus: [],
-        },
+      const menu:any = [
+        // {
+        //   Id: "ADdawDAWD",
+        //   Name: "数据设计表",
+        //   UrlLabel: "/dataDesign1",
+        //   Type: "Component",
+        //   Url: "/sys/form/designer/DataDesigner",
+        //   Param: "",
+        //   SubMenus: [],
+        // },
+        // {
+        //   Id: "fwafaw",
+        //   Name: "SQL设计表",
+        //   UrlLabel: "/SqlDesign1",
+        //   Type: "Component",
+        //   Url: "/sys/form/designer/SqlDesigner",
+        //   Param: "",
+        //   SubMenus: [],
+        // },
         {
           Id: "qwdqd",
-          Name: "S设计表",
+          Name: "设计器",
           SubMenus: [
             {
               Id: "ADDAWD",
-              Name: "数据设计表",
+              Name: "数据表设计器",
               UrlLabel: "/dataDesign",
               Type: "Component",
               Url: "/sys/form/designer/DataDesigner",
@@ -142,7 +142,7 @@ export const useMenuStore = defineStore({
             },
             {
               Id: "ADDFAWAWD",
-              Name: "SQL设计表",
+              Name: "SQL设计器",
               UrlLabel: "/SqlDesign",
               Type: "Component",
               Url: "/sys/form/designer/SqlDesigner",

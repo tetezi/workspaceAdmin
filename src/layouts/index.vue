@@ -2,7 +2,9 @@
     <el-container style="height: 100vh">
         <el-aside width="200px">
             <el-scrollbar :style="{
-                backgroundColor: '#292D3E'
+                backgroundColor: '#292D3E',
+              
+
             }">
                 <Menu></Menu>
             </el-scrollbar>

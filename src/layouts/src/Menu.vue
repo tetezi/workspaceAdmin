@@ -16,7 +16,9 @@ const route = useRoute()
 const menuStore = useMenuStore()
 const bind = computed(() => ({
     style: {
-        borderRight: '1px solid #292D3E'
+        borderRight: '1px solid #292D3E',
+        // borderBottom: '1px solid red'
+
     },
     router: true, defaultActive: route.fullPath, collapse: false, activeTextColor: "#E5E7EB", textColor: '#E5E7EB', backgroundColor: '#292D3E'
 }))

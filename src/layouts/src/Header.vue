@@ -1,13 +1,9 @@
 <template>
     <div style="display: flex; justify-content: flex-end;">
-        <el-dropdown>
-
-            <div>
-
+        <el-dropdown> 
                 <span class="user">
                     {{ useUserStore().user?.name }}
-                </span>
-            </div>
+                </span> 
             <template #dropdown>
                 <el-dropdown-menu>
                     <el-dropdown-item @click="logout">退出</el-dropdown-item>
@@ -16,9 +12,9 @@
         </el-dropdown>
     </div>
 </template>
-<script lang="ts" setup> 
+<script lang="ts" setup>
 import { useUserStore } from '@/stores/modules/user';
-import { messageBoxConfirm, message } from '@/utils/message'; 
+import { messageBoxConfirm, message } from '@/utils/message';
 const userStore = useUserStore()
 
 async function logout() {
@@ -28,10 +24,8 @@ async function logout() {
 }
 </script>
 <style scoped>
-.user {
-    cursor: pointer;
-    color: var(--el-color-primary);
-    display: flex;
-    align-items: center;
+.user { 
+    padding:5px 10px;
+    margin:5px
 }
 </style>
