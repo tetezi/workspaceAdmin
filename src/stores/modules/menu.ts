@@ -1,16 +1,13 @@
-import { getStorageName } from "@/utils/env";
 import { defineStore } from "pinia";
-import { useUserStore } from "./user";
-import { GetPermission } from "@/api/sys/menus";
 import { resetRouter } from "@/router";
 import type { RouteRecord } from "@/router/types";
 import { useRouter } from "vue-router";
-type Menu = {
+export type Menu = {
   Id: UUID;
   Name: string;
 
   UrlLabel: Nullable<string>;
-  Type: "Iframe" | "Component";
+  Type: "Iframe" | "Component" | "Group";
   Url: Nullable<string>;
   Param: Nullable<string>;
 
@@ -24,7 +21,39 @@ type State = {
   isCompleted: boolean;
   menuList: Array<Menu>;
 };
-
+const dynamicViewsModules: Record<string, () => Promise<Recordable>> =
+  import.meta.glob("../../views/**/*.{vue,tsx}");
+function dynamicImport(component: string) {
+  const keys = Object.keys(dynamicViewsModules);
+  const matchKeys = keys.filter((key) => {
+    const k = key.replace("../../views", "");
+    const startFlag = component.startsWith("/");
+    const endFlag = component.endsWith(".vue") || component.endsWith(".tsx");
+    const startIndex = startFlag ? 0 : 1;
+    const lastIndex = endFlag ? k.length : k.lastIndexOf(".");
+    const filePath = k.substring(startIndex, lastIndex);
+    return filePath === component || filePath === `${component}/index`;
+  });
+  console.log(matchKeys, component, "component");
+  if (matchKeys?.length === 1) {
+    const matchKey = matchKeys[0];
+    return dynamicViewsModules[matchKey];
+  } else if (matchKeys?.length > 1) {
+    console.warn(
+      "Please do not create `.vue` and `.TSX` files with the same file name in the same hierarchical directory under the views folder. This will cause dynamic introduction failure"
+    );
+    return;
+  } else {
+    console.warn(
+      "在src/views/下找不到`" +
+        component +
+        ".vue` 或 `" +
+        component +
+        ".tsx`, 请自行创建!"
+    );
+    return;
+  }
+}
 export const useMenuStore = defineStore({
   id: "menu",
   state: (): State => {
@@ -40,15 +69,14 @@ export const useMenuStore = defineStore({
         const result: any = {
           meta: {
             title: menu.Name,
+            include: true,
           },
           children,
         };
         if (menu.UrlLabel && menu.Url) {
           result.path = menu.UrlLabel;
           const component =
-            menu.Type === "Component"
-              ? () => import(`@/views${menu.Url}.vue`)
-              : undefined;
+            menu.Type === "Component" ? dynamicImport(menu.Url) : undefined;
           if (children.length > 0) {
             children.unshift({
               alias: menu.UrlLabel,
@@ -75,7 +103,51 @@ export const useMenuStore = defineStore({
     },
     async initPermissionMenu() {
       const router = useRouter();
-      const menu = await GetPermission();
+      // const menu = await GetPermission();
+      const menu = [
+        {
+          Id: "ADdawDAWD",
+          Name: "数据设计表",
+          UrlLabel: "/dataDesign1",
+          Type: "Component",
+          Url: "/sys/form/designer/DataDesigner",
+          Param: "",
+          SubMenus: [],
+        },
+        {
+          Id: "fwafaw",
+          Name: "SQL设计表",
+          UrlLabel: "/SqlDesign1",
+          Type: "Component",
+          Url: "/sys/form/designer/SqlDesigner",
+          Param: "",
+          SubMenus: [],
+        },
+        {
+          Id: "qwdqd",
+          Name: "S设计表",
+          SubMenus: [
+            {
+              Id: "ADDAWD",
+              Name: "数据设计表",
+              UrlLabel: "/dataDesign",
+              Type: "Component",
+              Url: "/sys/form/designer/DataDesigner",
+              Param: "",
+              SubMenus: [],
+            },
+            {
+              Id: "ADDFAWAWD",
+              Name: "SQL设计表",
+              UrlLabel: "/SqlDesign",
+              Type: "Component",
+              Url: "/sys/form/designer/SqlDesigner",
+              Param: "",
+              SubMenus: [],
+            },
+          ],
+        },
+      ];
       this.setMenuList(menu);
       this.getRouteByMenu.forEach((route) => {
         router.addRoute("Root", route);

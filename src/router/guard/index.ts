@@ -17,9 +17,12 @@ function createMenuGuard(router: Router) {
     if (token) {
       if (!menuStore.isCompleted) {
         await menuStore.initPermissionMenu();
+        next({ path: to.fullPath, replace: true, query: to.query });
+        return;
+      } else {
+        next();
+        return;
       }
-      next();
-      return;
     } else {
       next({
         path: PAGE.login,
