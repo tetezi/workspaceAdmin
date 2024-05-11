@@ -1,28 +1,27 @@
 <template>
-    <div>
+    <div style="border-top: 1px solid rgb(238,238,238);">
         <Tabs v-model:activeKey="tabValue" type="editable-card" :tabBarGutter="2" hideAdd
             @edit="(e, action) => action === 'remove' && removeHandle(e)">
             <TabPane v-for="item in tabStore.tabs" :key="item.path" :tab="item.title"></TabPane>
-            <!-- <template #rightExtra>
-                <el-button-group>
-                    <BasicButton text icon="Refresh" :func="refreshHandle"> </BasicButton>
-                    <Dropdown>
-                        <template #overlay>
-                            <Menu>
-                                <Menu.Item>
-                                    关闭其他标签页
-                                </Menu.Item>
-                                <Menu.Item>
-                                    关闭全部标签页
-                                </Menu.Item>
-                            </Menu>
+            <template #rightExtra>
+
+
+                <el-button-group style="margin:0 16px">
+                    <BasicButton icon="Refresh" :func="refreshHandle"> </BasicButton>
+                    <el-dropdown>
+                        <span class="user">
+                            <BasicButton icon="ArrowDownBold"> </BasicButton>
+                        </span>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="refreshHandle">刷新当前标签页</el-dropdown-item>
+                                <el-dropdown-item @click="removeOtherHandle">关闭其他标签页</el-dropdown-item>
+                                <el-dropdown-item @click="removeAllHandle">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
                         </template>
-<el-button text>
-    <BasicIcon icon="ArrowDownBold"></BasicIcon>
-</el-button>
-</Dropdown>
-</el-button-group>
-</template> -->
+                    </el-dropdown>
+                </el-button-group>
+            </template>
         </Tabs>
     </div>
 </template>
@@ -36,6 +35,7 @@ import { Tabs, TabPane, Dropdown, Menu } from 'ant-design-vue'
 // import "ant-design-vue/lib/dropdown/style/css";
 import { BasicButton } from 'ttz-ui'
 import { PAGE } from '@/router/constant';
+import { message } from '@/utils/message';
 
 // import "ant-design-vue/lib/menu/style/css";
 // import "ant-design-vue/lib/button/style/css";
@@ -45,18 +45,17 @@ const router = useRouter()
 const tabValue = computed({
     set: (path) => path !== route.path && router.push({ path }),
     get: () => route.path as string
-}) 
+})
 watch(() => route.path, () => {
     const { path } = route
     const meta: Meta = route.meta
-    if (meta.include) {
-        tabStore.addTab({
-            path, title: meta.title || '', include: meta.include
+    if (meta.cache) {
+        tabStore.setTab({
+            path, title: meta.title || '', cache: meta.cache
         })
     }
-
-},{
-    immediate:true
+}, {
+    immediate: true
 })
 async function removeHandle(targetKey: any) {
     if (targetKey === route.path) {
@@ -72,7 +71,28 @@ async function removeHandle(targetKey: any) {
     tabStore.delTabByPath(targetKey)
 
 }
+async function removeOtherHandle() {
+    const tab = tabStore.getTabByPath(route.path)
+    if (tab) {
+        tabStore.setTabs([tab])
+    } else {
+        await removeAllHandle()
+    }
+}
+async function removeAllHandle() {
+    tabStore.setTabs([])
+    await router.push(PAGE.home)
+}
 async function refreshHandle() {
+    tabStore.setTab({
+        path: route.path, title: (route.meta.title as string), cache: false
+    })
+    await router.replace({
+        path: '/redirect',
+        query: {
+            path: String(route.path),
+        }
+    })
     // await router.replace({
     //     path: '/redirect',
     //     query: {

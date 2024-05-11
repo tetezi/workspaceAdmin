@@ -70,8 +70,8 @@ export async function messageBoxConfirm(
   return ElMessageBox.confirm(
     () => {
       return (
-       
-        <div   /* v-loading={options.needBodyLoading && unref(bodyLoadingRef)}  */ >
+        <div /* v-loading={options.needBodyLoading && unref(bodyLoadingRef)}  */
+        >
           {isFunction(content) ? content() : content}
         </div>
       );

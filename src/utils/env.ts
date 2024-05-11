@@ -3,8 +3,15 @@ import pkg from "../../package.json";
 export const devMode = "development";
 export const prodMode = "production";
 
+export function getMiniTitle() {
+  return getEnv("VITE_MINI_TITLE");
+}
+export function getTitle() {
+  return getEnv("VITE_TITLE");
+}
+
 export function getStorageName() {
-  const title = getEnv("VITE_TITLE");
+  const title = getTitle();
   return `${title}_${getEnvMode()}_${pkg.version}`;
 }
 

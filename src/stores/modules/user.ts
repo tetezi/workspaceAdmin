@@ -35,12 +35,10 @@ export const useUserStore = defineStore({
   },
   actions: {
     async login({ userNo, password }: { userNo: string; password: string }) {
-      const hashedPassword = CryptoJS.SHA256(password).toString(
-        CryptoJS.enc.Hex
-      );
+      const hashedPassword = CryptoJS.MD5(password).toString(CryptoJS.enc.Hex);
       const { accessToken, user } = await Login({
         userNo,
-        password: password,
+        password: hashedPassword,
       });
       this.token = accessToken;
       this.user = user;

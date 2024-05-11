@@ -2,12 +2,13 @@ import { defineStore } from "pinia";
 import { resetRouter, router } from "@/router";
 import type { RouteRecord } from "@/router/types";
 import { useRouter } from "vue-router";
+import { GetPermission } from "@/api/sys/menus";
 export type Menu = {
   Id: UUID;
   Name: string;
 
   UrlLabel: Nullable<string>;
-  Type: "Iframe" | "Component" | "Group";
+  Type: "Iframe" | "View" | "Group";
   Url: Nullable<string>;
   Param: Nullable<string>;
 
@@ -65,18 +66,18 @@ export const useMenuStore = defineStore({
   getters: {
     getRouteByMenu(state): Array<RouteRecord> {
       function menuToRoute(menu: Menu): RouteRecord {
-        const children = menu.SubMenus.map(menuToRoute);
+        const children = (menu.SubMenus || []).map(menuToRoute);
         const result: any = {
           meta: {
             title: menu.Name,
-            include: true,
+            cache: true,
           },
           children,
         };
         if (menu.UrlLabel && menu.Url) {
           result.path = menu.UrlLabel;
           const component =
-            menu.Type === "Component" ? dynamicImport(menu.Url) : undefined;
+            menu.Type === "View" ? dynamicImport(menu.Url) : undefined;
           if (children.length > 0) {
             children.unshift({
               alias: menu.UrlLabel,
@@ -105,10 +106,10 @@ export const useMenuStore = defineStore({
       resetRouter();
       this.menuList = [];
       this.isCompleted = false;
-    }, 
-    async initPermissionMenu() {  
-      // const menu = await GetPermission();
-      const menu:any = [
+    },
+    async initPermissionMenu() {
+      await GetPermission();
+      const menu: any = [
         // {
         //   Id: "ADdawDAWD",
         //   Name: "数据设计表",
@@ -127,29 +128,78 @@ export const useMenuStore = defineStore({
         //   Param: "",
         //   SubMenus: [],
         // },
+        // {
+        //   Id: "qwdqd",
+        //   Name: "设计器",
+        //   SubMenus: [
+        //     // {
+        //     //   Id: "ADDAWD",
+        //     //   Name: "数据表设计器",
+        //     //   UrlLabel: "/dataDesign",
+        //     //   Type: "Component",
+        //     //   Url: "/sys/form/designer/DataDesigner",
+        //     //   Param: "",
+        //     //   SubMenus: [],
+        //     // },
+        //     {
+        //       Id: "ADDFAWAWD",
+        //       Name: "SQL设计器",
+        //       UrlLabel: "/SqlDesign",
+        //       Type: "Component",
+        //       Url: "/sys/form/designer/SqlDesigner",
+        //       Param: "",
+        //       SubMenus: [],
+        //     },
+        //   ],
+        // },
         {
-          Id: "qwdqd",
+          Id: "qwdasfqd",
           Name: "设计器",
           SubMenus: [
             {
-              Id: "ADDAWD",
-              Name: "数据表设计器",
-              UrlLabel: "/dataDesign",
-              Type: "Component",
-              Url: "/sys/form/designer/DataDesigner",
+              Id: "ADDAWasfaD",
+              Name: "数据表列表",
+              UrlLabel: "/dataRecords",
+              Type: "View",
+              Url: "/sys/form/records/DataRecords",
               Param: "",
               SubMenus: [],
             },
             {
-              Id: "ADDFAWAWD",
-              Name: "SQL设计器",
-              UrlLabel: "/SqlDesign",
-              Type: "Component",
-              Url: "/sys/form/designer/SqlDesigner",
+              Id: "ADDFAasdfasWAWD",
+              Name: "SQL列表",
+              UrlLabel: "/SqlRecords",
+              Type: "View",
+              Url: "/sys/form/records/SqlRecords",
+              Param: "",
+              SubMenus: [],
+            },
+            {
+              Id: "ADDFAasdfaafsWAWD",
+              Name: "应用列表",
+              UrlLabel: "/AppRecords",
+              Type: "View",
+              Url: "/sys/form/records/AppRecords",
+              Param: "",
+              SubMenus: [],
+            },
+            {
+              Id: "asfasdagawg",
+              Name: "角色列表",
+              UrlLabel: "/RoleRecords",
+              Type: "View",
+              Url: "/sys/form/records/RoleRecords",
               Param: "",
               SubMenus: [],
             },
           ],
+        },
+        {
+          Id: "FAGAS",
+          Name: "菜单配置",
+          UrlLabel: "/admin/menu",
+          Type: "View",
+          Url: "/sys/admin/menu/MenuRecords",
         },
       ];
       this.setMenuList(menu);

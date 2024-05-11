@@ -5,6 +5,8 @@ import qs from "qs";
 import { message } from "../message";
 import type { RequestHooks, RequestOptions } from "./type";
 import { useUserStore } from "@/stores/modules/user";
+import { router } from "@/router";
+import { PAGE } from "@/router/constant";
 export enum ContentTypeEnum {
   // JSON 格式的数据。
   JSON = "application/json;charset=UTF-8",
@@ -21,13 +23,21 @@ export const handleCheckStatusCode: RequestHooks["thenHooks"] = async (
 ) => {
   const { checkStatusCode } = requestOptions;
   async function checkStatusCodeByType(res: AxiosResponse) {
-    if (res.data.type !== 1) {
+    console.log(100, res);
+    if (res.data.type === 1) {
+      return res;
+    } else if (res.data.type === 10) {
+      router.replace(PAGE.login);
+      console.log(222);
       return Promise.reject({
         _errMessage: res.data.msg,
         ...res.data,
       });
     } else {
-      return res;
+      return Promise.reject({
+        _errMessage: res.data.msg,
+        ...res.data,
+      });
     }
   }
   if (isFunction(checkStatusCode)) {

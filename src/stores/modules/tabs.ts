@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 export type Tab = {
   path: string;
   title: string;
-  include: boolean;
+  cache: boolean;
 };
 type TabState = {
   tabs: Array<Tab>;
@@ -23,8 +23,11 @@ export const useTabStore = defineStore({
     },
   ],
   getters: {
-    getTabPaths(): Array<string> {
-      return this.tabs.map((i) => i.path);
+    // getTabPaths(): Array<string> {
+    //   return this.tabs.map((i) => i.path);
+    // },
+    getCacheTabPaths(): Array<string> {
+      return this.tabs.filter((tab) => tab.cache).map((i) => i.path);
     },
   },
   actions: {
@@ -42,17 +45,15 @@ export const useTabStore = defineStore({
     },
     clearTabs() {
       this.tabs = [];
-      console.log('清空')
     },
-    addTab(tab: Tab, index?: number) {
-      console.log('添加',tab)
-      if (this.getTabByPath(tab.path)) {
-        return;
-      }
+    setTab(tab: Tab, index?: number) {
       if (isUndefined(index)) {
-        index = this.tabs.length;
+        index =
+          this.getTabIndexByPath(tab.path) !== -1
+            ? this.getTabIndexByPath(tab.path)
+            : this.tabs.length;
       }
-      this.tabs.splice(index, 0, tab);
+      this.tabs.splice(index, 1, tab);
     },
     delTabByPath(path: string) {
       this.setTabs(this.tabs.filter((i) => i.path !== path));

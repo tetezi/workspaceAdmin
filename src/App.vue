@@ -5,6 +5,6 @@
 </template>
 <script lang="tsx" setup>
 import { useTitle } from "./hooks/useTitle";
-import zhCn from 'element-plus/es/locale/lang/zh-cn' 
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 useTitle() 
 </script>

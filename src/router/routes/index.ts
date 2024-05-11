@@ -1,3 +1,4 @@
+import { defineComponent, h } from "vue";
 import { LAYOUT, PAGE } from "../constant";
 import type { RouteRecord } from "../types";
 import { isArray } from "lodash";
@@ -10,10 +11,12 @@ export const routeModuleList: RouteRecord[] = [];
 
 for (const key in modules) {
   const mod = modules[key].default;
-  if (isArray(mod)) {
-    routeModuleList.push(...mod);
-  } else {
-    routeModuleList.push(mod);
+  if (mod) {
+    if (isArray(mod)) {
+      routeModuleList.push(...mod);
+    } else {
+      routeModuleList.push(mod);
+    }
   }
 }
 
@@ -49,6 +52,23 @@ export const LoginRoute: RouteRecord = {
 /**
  * 404
  */
+export const RedirectRoute: RouteRecord = {
+  path: "/redirect",
+  name: "redirect",
+  redirect: "/redirect/index",
+  component: LAYOUT,
+  children: [
+    {
+      path: "/redirect/index",
+      name: "redirect_index",
+      component: () => import("@/views/sys/redirect/Redirect.vue"),
+    },
+  ],
+};
+
+/**
+ * 404
+ */
 export const PageNotFoundRoute: RouteRecord = {
   path: "/:path(.*)*",
   name: "404",
@@ -73,6 +93,7 @@ export const PageNotFoundRoute: RouteRecord = {
 export const basicRoutes = [
   LoginRoute,
   RootRoute,
+  RedirectRoute,
   PageNotFoundRoute,
   ...routeModuleList,
 ];

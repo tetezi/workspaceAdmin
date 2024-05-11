@@ -1,40 +1,68 @@
 <template>
-    DataDesigner
-    <FormComponent></FormComponent>
-    <BasicButton type="primary" style="width: 100%;" :func="() => formMethods.submitFunction()">提交</BasicButton>
+    <Designer ref="designerRef" :id="props.id" :tableId :formProps></Designer>
 </template>
-<script lang="tsx" setup>
-import { SaveTableRecord } from '@/api/sys/form';
+<script lang="ts" setup>
 import { EmptyUUId } from '@/utils/uuid';
-import { useForm, BasicButton } from 'ttz-ui'
-const [FormComponent, formMethods] = useForm({
-    defaultValue: { Id: EmptyUUId, Cols: [] },
+import { pick } from 'lodash';
+import Designer from './Designer.vue';
+import type { FormBind } from 'ttz-ui';
+import { ref, unref } from 'vue';
+const tableId = '2D726258-9506-4E95-ABFD-657433AC8416'
+const props = defineProps<{
+    id?: UUID
+}>()
+const designerRef = ref()
+const formProps: FormBind = {
+    defaultValue: { Cols: [] },
     formSchemas: [
-        // { field: 'TableId', label: 'TableId', component: 'Input' },
-        { field: 'Id', label: 'Id', component: 'Input' },
-        { field: 'TableName', label: 'TableName', component: 'Input' },
-        { field: 'Name', label: 'Name', component: 'Input' },
-        { field: 'No', label: 'No', component: 'Input' },
         {
-            field: 'Cols', label: 'Cols', component: 'EditableTable', componentProps: {
-                addBtnValue: { Id: EmptyUUId },
+            field: 'No', label: '编号', component: 'Input', ifShow: Boolean(props.id), componentProps: {
+                disabled: true
+            }
+        },
+        { field: 'Name', label: '名称', component: 'Input' },
+        { field: 'TableName', label: 'TableName', component: 'Input' },
+
+        {
+            field: 'Cols', label: 'Cols', component: 'EditableTable', componentStyle: {
+                height: '500px'
+            }, componentProps: {
+                height: 500,
                 columns: [
+                    // {
+                    //     label: 'Id', prop: 'Id'
+                    // },
                     {
-                        label: 'Id', prop: 'Id'
+                        label: 'No', prop: 'No', hide: ({ row }) => {
+                            return !row.Id
+                        }, editConfig: {
+                            component: 'Input',
+                            componentProps: {
+                                disabled: true
+                            }
+                        }
                     },
                     {
                         label: 'Name', prop: 'Name', editConfig: {
                             component: 'Input'
                         }
                     },
-                    {
-                        label: 'No', prop: 'No', editConfig: {
-                            component: 'Input'
-                        }
-                    },
+
                     {
                         label: 'ColType', prop: 'ColType', editConfig: {
-                            component: 'Input'
+                            component: 'Select', componentProps: {
+                                options: [
+                                    { value: 'Id', label: 'Id' },
+                                    { value: 'String', label: 'String' },
+                                    { value: 'Bool', label: 'Bool' },
+                                    { value: 'Int', label: 'Int' },
+                                    { value: 'Decimal', label: 'Decimal' },
+                                    { value: 'Decimal', label: 'Decimal' },
+                                    { value: 'DateTime', label: 'DateTime' },
+                                    { value: 'SubTable', label: 'SubTable' },
+                                ]
+
+                            }
                         }
                     }, {
                         label: 'IsSubTable', prop: 'IsSubTable', editConfig: {
@@ -64,9 +92,19 @@ const [FormComponent, formMethods] = useForm({
 
         },
     ],
-    submitApi: async (params) => {
-        console.log(params)
-        await SaveTableRecord('2D726258-9506-4E95-ABFD-657433AC8416', params)
-    }
-}) 
+    beforeSubmit: (raw) => {
+        return {
+            ...pick(raw, ['TableName', 'Name']),
+            Cols: raw.Cols.map((col) => {
+                return {
+                    Id: col.Id || EmptyUUId,
+                    ...pick(col, ['Name', 'ColType', 'IsSubTable', 'SubTableType', 'SubTableId'])
+                }
+            })
+        }
+    },
+}
+defineExpose({
+    submit: () => unref(designerRef).submit()
+})
 </script>

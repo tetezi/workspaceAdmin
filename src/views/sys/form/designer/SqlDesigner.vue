@@ -1,36 +1,64 @@
 <template>
-    SqlDesigner
-    <FormComponent></FormComponent>
-    <BasicButton type="primary" style="width: 100%;" :func="() => formMethods.submitFunction()">提交</BasicButton>
+    <Designer ref="designerRef" :id="props.id" :tableId :formProps></Designer>
 </template>
-<script lang="tsx" setup>
-import { SaveTableRecord } from '@/api/sys/form';
+<script lang="ts" setup>
 import { EmptyUUId } from '@/utils/uuid';
-import { useForm, BasicButton } from 'ttz-ui'
-const [FormComponent, formMethods] = useForm({
-    defaultValue: { TableId: '', Id: EmptyUUId, Cols: [] },
+import { pick } from 'lodash';
+import Designer from './Designer.vue';
+import type { FormBind } from 'ttz-ui';
+import { ref, unref } from 'vue';
+const tableId = `d1d0924b-c262-4989-ab40-65b28c539bf2`
+const props = defineProps<{
+    id?: UUID
+}>()
+const designerRef = ref()
+const formProps: FormBind = {
+    defaultValue: { Cols: [] },
     formSchemas: [
-        // { field: 'TableId', label: 'TableId', component: 'Input' },
-        { field: 'Id', label: 'Id', component: 'Input' },
-        { field: 'No', label: 'No', component: 'Input' },
-        { field: 'Name', label: 'Name', component: 'Input' },
+        {
+            field: 'No', label: '编号', component: 'Input', ifShow: Boolean(props.id), componentProps: {
+                disabled: true
+            }
+        },
+        { field: 'Name', label: '名称', component: 'Input' },
         { field: 'SQLContent', label: 'SQLContent', component: 'Input' },
         { field: 'PageSize', label: 'PageSize', component: 'Input' },
         { field: 'OrderBy', label: 'OrderBy', component: 'Input' },
         {
             field: 'ViewType', label: 'ViewType', component: 'Select', componentProps: {
-                options: [{ value: 'Table', label: 'Table' }, { value: 'VerticalTable', label: 'VerticalTable' }]
+                options: [{ value: 'Table', label: 'Table' }, { value: 'SingleObject', label: 'SingleObject' }]
             }
         },
-        { field: 'ColConfig', label: 'ColConfig', component: 'Input' },
         { field: 'Dimension', label: 'Dimension', component: 'Input' },
         {
-            field: 'ParamList', label: 'ParamList', component: 'EditableTable', componentProps: {
-                addBtnValue: { Id: EmptyUUId },
+            field: 'ColConfigs', label: 'ColConfigs', component: 'EditableTable', componentStyle: {
+                height: '300px',
+            }, componentProps: {
                 columns: [
                     {
-                        label: 'Id', prop: 'Id'
+                        label: 'ColName', prop: 'ColName', editConfig: {
+                            component: 'Input'
+                        }
                     },
+                    {
+                        label: 'CountType', prop: 'CountType', editConfig: {
+                            component: 'Input'
+                        }
+                    },
+                    {
+                        label: 'Value', prop: 'Value', editConfig: {
+                            component: 'Input'
+                        }
+                    },
+                ]
+            }
+        },
+        {
+            field: 'Params', label: 'Params', component: 'EditableTable',
+            componentStyle: {
+                height: '300px',
+            }, componentProps: {
+                columns: [
                     {
                         label: 'ParamName', prop: 'ParamName', editConfig: {
                             component: 'Input'
@@ -46,9 +74,26 @@ const [FormComponent, formMethods] = useForm({
 
         },
     ],
-    submitApi: async (params) => {
-        console.log(params)
-        await SaveTableRecord('', params)
-    }
-}) 
+    beforeSubmit: (raw) => {
+        return {
+            ...pick(raw, ['SQLContent', 'Name', 'PageSize', 'OrderBy', 'ViewType', 'Dimension']),
+            ColConfigs: raw.ColConfigs.map((colConfig) => {
+                return {
+                    Id: colConfig.Id || EmptyUUId,
+                    ...pick(colConfig, ['ColName', 'CountType', 'Value'])
+                }
+
+            }),
+            Params: raw.Params.map((param) => {
+                return {
+                    Id: param.Id || EmptyUUId,
+                    ...pick(param, ['ParamName', 'SQLAffect'])
+                }
+            })
+        }
+    },
+}
+defineExpose({
+    submit: () => unref(designerRef).submit()
+})
 </script>

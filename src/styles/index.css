@@ -6,6 +6,7 @@ html {
 body {
   height: 100%;
   margin: 0;
+  width: 100% !important;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -21,4 +22,8 @@ body {
 
 #app {
   height: 100%;
+}
+
+.el-button + .el-button {
+  margin-left: 0;
 }
