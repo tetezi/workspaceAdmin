@@ -6,26 +6,27 @@
 </template>
 <script lang="tsx" setup>
 import { useMenuStore, type Menu } from '@/stores/modules/menu';
+import { useSettingStore } from '@/stores/modules/setting';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import BasicIcon from '@/components/Icon/BasicIcon.vue'
 import { ElMenuItem, ElSubMenu } from 'element-plus';
 
-const backgroundColor = '#292D3E'
 const activeBackgroundColor = '#0960BD'
 const textColor = '#E5E7EB'
 const route = useRoute()
 const menuStore = useMenuStore()
+const settingStore = useSettingStore()
 const bind = computed(() => ({
     style: {
-        borderRight: `1px solid ${backgroundColor}`,
+        borderRight: `1px solid ${settingStore.menu.bgColor}`,
     },
     router: true,
     defaultActive: route.fullPath,
-    collapse: false,
+    collapse: settingStore.menu.collapse,
     activeTextColor: textColor,
     textColor: textColor,
-    backgroundColor: backgroundColor
+    backgroundColor: settingStore.menu.bgColor
 }))
 function getMenu(routes: Array<Menu>) {
     return routes.map((item) => {
@@ -40,7 +41,7 @@ function getMenu(routes: Array<Menu>) {
             </ElSubMenu>
         } else {
             return <ElMenuItem index={Id} route={String(UrlLabel)} style={{
-                backgroundColor: isActive ? activeBackgroundColor : backgroundColor
+                backgroundColor: isActive ? activeBackgroundColor : settingStore.menu.bgColor
             }}>
                 <BasicIcon icon='Location' />
                 <span>{Name} </span>
@@ -51,13 +52,7 @@ function getMenu(routes: Array<Menu>) {
 } 
 </script>
 <style>
-:root {
-    /* --el-menu-bg-color: #292D3E; */
-    /* 设置 Menu 组件的背景颜色 */
-}
-
 .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
-    min-height: 400px;
 }
 </style>

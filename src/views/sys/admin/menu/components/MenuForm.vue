@@ -11,7 +11,6 @@ import { useForm, type FormBind } from 'ttz-ui'
 import { pick } from 'lodash';
 import { ref, unref } from 'vue';
 import { watch } from 'vue';
-import { message } from '@/utils/message';
 const props = defineProps<{
     id?: UUID,
     parentId?: UUID

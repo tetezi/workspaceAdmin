@@ -23,12 +23,10 @@ export const handleCheckStatusCode: RequestHooks["thenHooks"] = async (
 ) => {
   const { checkStatusCode } = requestOptions;
   async function checkStatusCodeByType(res: AxiosResponse) {
-    console.log(100, res);
     if (res.data.type === 1) {
       return res;
     } else if (res.data.type === 10) {
       router.replace(PAGE.login);
-      console.log(222);
       return Promise.reject({
         _errMessage: res.data.msg,
         ...res.data,
@@ -84,8 +82,7 @@ export const handleErrorMessageMode: RequestHooks["catchHooks"] = (
       errMessage = "网络异常，请检查您的网络连接是否正常!	";
     } else {
       const status: any = get(error, "response.status");
-      errMessage =
-        checkStatus(status) || get(error, "response.data.error.message", "");
+      errMessage = checkStatus(status);
     }
   }
   if (!errMessage) {

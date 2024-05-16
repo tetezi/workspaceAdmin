@@ -32,7 +32,7 @@ export const RootRoute: RouteRecord = {
       name: "home",
       component: () => import("@/views/home.vue"),
       meta: {
-        title: "主页",
+        title: "首页",
       },
     },
   ],

@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { resetRouter, router } from "@/router";
 import type { RouteRecord } from "@/router/types";
-import { useRouter } from "vue-router";
 import { GetPermission } from "@/api/sys/menus";
+import { getEnv } from "@/utils/env";
 export type Menu = {
   Id: UUID;
+  No: string;
   Name: string;
 
   UrlLabel: Nullable<string>;
@@ -35,7 +36,6 @@ function dynamicImport(component: string) {
     const filePath = k.substring(startIndex, lastIndex);
     return filePath === component || filePath === `${component}/index`;
   });
-  console.log(matchKeys, component, "component");
   if (matchKeys?.length === 1) {
     const matchKey = matchKeys[0];
     return dynamicViewsModules[matchKey];
@@ -108,100 +108,9 @@ export const useMenuStore = defineStore({
       this.isCompleted = false;
     },
     async initPermissionMenu() {
-      await GetPermission();
-      const menu: any = [
-        // {
-        //   Id: "ADdawDAWD",
-        //   Name: "数据设计表",
-        //   UrlLabel: "/dataDesign1",
-        //   Type: "Component",
-        //   Url: "/sys/form/designer/DataDesigner",
-        //   Param: "",
-        //   SubMenus: [],
-        // },
-        // {
-        //   Id: "fwafaw",
-        //   Name: "SQL设计表",
-        //   UrlLabel: "/SqlDesign1",
-        //   Type: "Component",
-        //   Url: "/sys/form/designer/SqlDesigner",
-        //   Param: "",
-        //   SubMenus: [],
-        // },
-        // {
-        //   Id: "qwdqd",
-        //   Name: "设计器",
-        //   SubMenus: [
-        //     // {
-        //     //   Id: "ADDAWD",
-        //     //   Name: "数据表设计器",
-        //     //   UrlLabel: "/dataDesign",
-        //     //   Type: "Component",
-        //     //   Url: "/sys/form/designer/DataDesigner",
-        //     //   Param: "",
-        //     //   SubMenus: [],
-        //     // },
-        //     {
-        //       Id: "ADDFAWAWD",
-        //       Name: "SQL设计器",
-        //       UrlLabel: "/SqlDesign",
-        //       Type: "Component",
-        //       Url: "/sys/form/designer/SqlDesigner",
-        //       Param: "",
-        //       SubMenus: [],
-        //     },
-        //   ],
-        // },
-        {
-          Id: "qwdasfqd",
-          Name: "设计器",
-          SubMenus: [
-            {
-              Id: "ADDAWasfaD",
-              Name: "数据表列表",
-              UrlLabel: "/dataRecords",
-              Type: "View",
-              Url: "/sys/form/records/DataRecords",
-              Param: "",
-              SubMenus: [],
-            },
-            {
-              Id: "ADDFAasdfasWAWD",
-              Name: "SQL列表",
-              UrlLabel: "/SqlRecords",
-              Type: "View",
-              Url: "/sys/form/records/SqlRecords",
-              Param: "",
-              SubMenus: [],
-            },
-            {
-              Id: "ADDFAasdfaafsWAWD",
-              Name: "应用列表",
-              UrlLabel: "/AppRecords",
-              Type: "View",
-              Url: "/sys/form/records/AppRecords",
-              Param: "",
-              SubMenus: [],
-            },
-            {
-              Id: "asfasdagawg",
-              Name: "角色列表",
-              UrlLabel: "/RoleRecords",
-              Type: "View",
-              Url: "/sys/form/records/RoleRecords",
-              Param: "",
-              SubMenus: [],
-            },
-          ],
-        },
-        {
-          Id: "FAGAS",
-          Name: "菜单配置",
-          UrlLabel: "/admin/menu",
-          Type: "View",
-          Url: "/sys/admin/menu/MenuRecords",
-        },
-      ];
+      const menu = await GetPermission({
+        appId: getEnv("VITE_APP_ID"),
+      });
       this.setMenuList(menu);
       this.getRouteByMenu.forEach((route) => {
         router.addRoute("Root", route);

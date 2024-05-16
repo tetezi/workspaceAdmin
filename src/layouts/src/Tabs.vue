@@ -1,7 +1,8 @@
 <template>
     <div style="border-top: 1px solid rgb(238,238,238);">
-        <Tabs v-model:activeKey="tabValue" type="editable-card" :tabBarGutter="2" hideAdd
+        <Tabs v-model:activeKey="tabValue" type="editable-card" :tabBarGutter="2" hideAdd size="small"
             @edit="(e, action) => action === 'remove' && removeHandle(e)">
+            <TabPane :key="PAGE.home" tab="首页" :closable="false"></TabPane>
             <TabPane v-for="item in tabStore.tabs" :key="item.path" :tab="item.title"></TabPane>
             <template #rightExtra>
 

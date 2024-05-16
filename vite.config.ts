@@ -20,6 +20,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       }),
       Components({
         resolvers: [ElementPlusResolver()],
+        include: [/\.vue$/, /\.tsx?$/],
       }),
     ],
     server: {

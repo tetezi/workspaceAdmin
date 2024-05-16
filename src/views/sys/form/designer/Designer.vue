@@ -22,10 +22,8 @@ const emit = defineEmits<{
     submit: []
 }>()
 const loadingRef = ref(false)
-console.log('cgou1')
 watch(() => props.id, async (a, b) => {
     loadingRef.value = true
-    console.log('刷新', a, b)
     if (props.id) {
         await GetTableRecord(props.id).then((res) => {
             formMethods.setModelValue(res)

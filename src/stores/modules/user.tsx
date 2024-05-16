@@ -4,14 +4,16 @@ import { defineStore } from "pinia";
 import CryptoJS from "crypto-js";
 import { useTabStore } from "./tabs";
 import { useMenuStore } from "./menu";
-import { useRouter } from "vue-router";
 import { PAGE } from "@/router/constant";
 import { router } from "@/router";
-
+import type { VNode } from "vue";
+import defaultAvatar from "@/assets/images/defaultAvatar.jpg";
 type UserInfo = {
   userId: UUID;
   userNo: string;
   name: string;
+
+  avatarUrl: string;
 };
 type State = {
   user?: UserInfo;
@@ -31,6 +33,16 @@ export const useUserStore = defineStore({
   getters: {
     getToken(state): string | undefined {
       return state.token;
+    },
+    getUserAvatar(state): (size: number) => VNode {
+      return (size) => (
+        <el-avatar
+          src={state.user?.avatarUrl || defaultAvatar}
+          size={size}
+        >
+          {state.user?.name}
+        </el-avatar>
+      );
     },
   },
   actions: {

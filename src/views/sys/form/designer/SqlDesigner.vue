@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 const designerRef = ref()
 const formProps: FormBind = {
-    defaultValue: { Cols: [] },
+    defaultValue: { ViewType: 'List', ColConfigs: [], Params: [] },
     formSchemas: [
         {
             field: 'No', label: '编号', component: 'Input', ifShow: Boolean(props.id), componentProps: {
@@ -21,12 +21,36 @@ const formProps: FormBind = {
             }
         },
         { field: 'Name', label: '名称', component: 'Input' },
-        { field: 'SQLContent', label: 'SQLContent', component: 'Input' },
+        {
+            field: 'Params', label: 'Params', component: 'EditableTable',
+            componentStyle: {
+                height: '300px',
+            }, componentProps: {
+                columns: [
+                    {
+                        label: 'ParamName', prop: 'ParamName', editConfig: {
+                            component: 'Input'
+                        }
+                    },
+                    {
+                        label: 'SQLAffect', prop: 'SQLAffect', editConfig: {
+                            component: 'Input'
+                        }
+                    },
+                ]
+            }
+
+        },
+        {
+            field: 'SQLContent', label: 'SQLContent', component: 'Input', componentProps: {
+                type: 'textarea',
+            }
+        },
         { field: 'PageSize', label: 'PageSize', component: 'Input' },
         { field: 'OrderBy', label: 'OrderBy', component: 'Input' },
         {
             field: 'ViewType', label: 'ViewType', component: 'Select', componentProps: {
-                options: [{ value: 'Table', label: 'Table' }, { value: 'SingleObject', label: 'SingleObject' }]
+                options: [{ value: 'List', label: 'List' }, { value: 'SingleObject', label: 'SingleObject' }]
             }
         },
         { field: 'Dimension', label: 'Dimension', component: 'Input' },
@@ -53,38 +77,19 @@ const formProps: FormBind = {
                 ]
             }
         },
-        {
-            field: 'Params', label: 'Params', component: 'EditableTable',
-            componentStyle: {
-                height: '300px',
-            }, componentProps: {
-                columns: [
-                    {
-                        label: 'ParamName', prop: 'ParamName', editConfig: {
-                            component: 'Input'
-                        }
-                    },
-                    {
-                        label: 'SQLAffect', prop: 'SQLAffect', editConfig: {
-                            component: 'Input'
-                        }
-                    },
-                ]
-            }
 
-        },
     ],
     beforeSubmit: (raw) => {
         return {
             ...pick(raw, ['SQLContent', 'Name', 'PageSize', 'OrderBy', 'ViewType', 'Dimension']),
-            ColConfigs: raw.ColConfigs.map((colConfig) => {
+            ColConfigs: (raw.ColConfigs || []).map((colConfig) => {
                 return {
                     Id: colConfig.Id || EmptyUUId,
                     ...pick(colConfig, ['ColName', 'CountType', 'Value'])
                 }
 
             }),
-            Params: raw.Params.map((param) => {
+            Params: (raw.Params || []).map((param) => {
                 return {
                     Id: param.Id || EmptyUUId,
                     ...pick(param, ['ParamName', 'SQLAffect'])

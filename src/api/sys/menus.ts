@@ -1,10 +1,10 @@
 import { baseHttp } from "@/utils/http";
-export async function GetPermission() {
+export async function GetPermission(params: { appId: UUID }) {
   return baseHttp.post(
     {
       url: "/Account/GetPermission",
     },
-    {}
+    params
   );
 }
 export async function GetAllMenu(params) {

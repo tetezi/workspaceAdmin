@@ -58,7 +58,6 @@ export class VAXios {
     );
     // 请求前钩子
     const req = await beforeHooks(actualAxiosConfig, actualRequestOptions);
-    console.log(req);
     return new Promise((resolve, reject) => {
       this.axiosInstance
         .request(req)

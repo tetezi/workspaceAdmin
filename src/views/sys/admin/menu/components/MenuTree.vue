@@ -8,25 +8,17 @@
     </el-tree>
 </template>
 <script lang="ts" setup>
-import { computed, unref, ref, watch } from 'vue';
-import { BasicButton, useApi, useLocalModel } from 'ttz-ui';
+import { computed, unref, ref } from 'vue';
+import { BasicButton, useApi } from 'ttz-ui';
 import { GetAllMenu } from '@/api/sys/menus';
 const props = defineProps<{
     appId: UUID
+    selectType: 'check' | 'select'
 }>()
-const emit = defineEmits<{
-    currentChange: [data: Recordable]
-}>()
-// const modelValue = defineModel()
-// const { setModelValue, getModelValue, localModelValue } = useLocalModel(modelValue)
-const currentData = ref<Recordable>()
 const { dataRef, loadingRef, fetch: reloadMenuTree } = useApi({
     api: GetAllMenu,
     immediate: true,
     defaultData: [],
-    onChangeData() {
-        currentData.value = undefined
-    },
 }, () => ({
     appId: props.appId
 }))
@@ -36,9 +28,10 @@ const treeBind = computed(() => {
     return {
         nodeKey: 'Id',
         data: unref(dataRef),
-        highlightCurrent: true,
+        highlightCurrent: props.selectType === 'select',
         defaultExpandAll: true,
         checkOnClickNode: true,
+        showCheckbox: props.selectType === 'check',
         props: {
             label: 'Name',
             children: 'SubMenus'
@@ -50,21 +43,21 @@ const treeBind = computed(() => {
             }
             return data.Name.includes(value)
         },
-        onCurrentChange: (data) => {
-            currentData.value = data
-            emit('currentChange', data)
-            // console.log('设置')
-            // setModelValue(Id)
-        }
     }
 })
 function search(value) {
     unref(treeRef)!.filter(value)
 }
-function getCurrentNode() {
+function getCurrent() {
     return unref(treeRef).getCurrentNode()
 }
+function getChecked() {
+    return [...unref(treeRef).getCheckedNodes(), ...unref(treeRef).getHalfCheckedNodes()]
+}
+function setChecked(keys) {
+    return unref(treeRef).setCheckedKeys(keys, true)
+}
 defineExpose({
-    getCurrentNode, reloadMenuTree
+    getCurrent, getChecked, setChecked, reloadMenuTree
 })
 </script>

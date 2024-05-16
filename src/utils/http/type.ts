@@ -9,7 +9,7 @@ export interface RequestOptions {
     | IStringifyOptions
     | ((params: Recordable, options: any) => string);
   // 错误提示类型
-  errorMessageMode?: "message" | "log";
+  errorMessageMode?: false | "message" | "log";
   // 状态码检查
   checkStatusCode?: "type" | ((res: AxiosResponse<any>) => Promise<any>);
   key?: UUID;

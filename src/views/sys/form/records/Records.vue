@@ -18,7 +18,7 @@ const props = defineProps<{
     actionColumn?: (row: Recordable) => VNodeChild//TableBind<Recordable>['actionColumn']
     designer: Component<Recordable>
 }>()
-const [DialogComp, dialogMethods] = useDialog<undefined | string>(() => {
+const [DialogComp, dialogMethods] = useDialog<string>(() => {
     const dataDesignerRef = ref()
     return {
         width: '90%',
@@ -64,7 +64,7 @@ async function edit(row) {
     dialogMethods.open(row.Id)
 }
 async function add() {
-    dialogMethods.open(undefined)
+    dialogMethods.open('')
 }
 defineExpose({
     reload: () => tableMethods.reload()
