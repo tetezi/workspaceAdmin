@@ -28,15 +28,14 @@
 </template>
 <script lang="ts" setup>
 import { useTabStore } from '@/stores/modules/tabs';
-import { computed, watch, watchEffect } from 'vue';
+import { computed, watch, } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Meta } from '@/router/types'
-import { Tabs, TabPane, Dropdown, Menu } from 'ant-design-vue'
+import { Tabs, TabPane } from 'ant-design-vue'
 // import "ant-design-vue/lib/tabs/style/css";
 // import "ant-design-vue/lib/dropdown/style/css";
 import { BasicButton } from 'ttz-ui'
 import { PAGE } from '@/router/constant';
-import { message } from '@/utils/message';
 
 // import "ant-design-vue/lib/menu/style/css";
 // import "ant-design-vue/lib/button/style/css";

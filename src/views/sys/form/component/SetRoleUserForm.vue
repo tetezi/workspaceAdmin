@@ -3,7 +3,7 @@
     </FormComp>
 </template>
 <script lang="ts" setup>
-import { useApi, useForm, useTable, BasicButton } from 'ttz-ui';
+import { useApi, useForm } from 'ttz-ui';
 import { SetRoleUser } from '@/api/sys/role';
 import { computed, unref } from 'vue';
 import { GetSIData } from '@/api/sys/interface';

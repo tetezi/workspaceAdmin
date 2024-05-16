@@ -6,7 +6,6 @@ import {
   type MessageBoxState,
 } from "element-plus";
 import { isFunction, isNumber, isObject, isString, omit } from "lodash";
-import { ref, unref } from "vue";
 import { buildUUID } from "./uuid";
 /** 消息提示
  * @param msg 字符串或带有message字段的对象

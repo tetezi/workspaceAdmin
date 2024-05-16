@@ -5,7 +5,7 @@
 import { pick } from 'lodash';
 import Designer from './Designer.vue';
 import type { FormBind } from 'ttz-ui';
-import { markRaw, ref, shallowRef, unref } from 'vue';
+import { markRaw, ref, unref } from 'vue';
 import EasyApiSelect from '@/components/EasyApiSelect/EasyApiSelect.vue';
 const tableId = '193fc4e9-6956-4578-8cbf-46549c842484'
 const props = defineProps<{

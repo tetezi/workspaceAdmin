@@ -13,7 +13,6 @@ import { PAGE } from '@/router/constant';
 import { useUserStore } from '@/stores/modules/user';
 import { message } from '@/utils/message';
 import { BasicButton, useForm } from 'ttz-ui';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import logo2 from '@/assets/images/logo2.png'
 const router = useRouter()

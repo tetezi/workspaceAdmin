@@ -1,6 +1,5 @@
 import { getStorageName } from "@/utils/env";
 import { defineStore } from "pinia";
-import { cloneDeep } from "lodash";
 
 type State = {
   menu: {

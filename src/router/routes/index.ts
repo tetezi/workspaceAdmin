@@ -1,4 +1,3 @@
-import { defineComponent, h } from "vue";
 import { LAYOUT, PAGE } from "../constant";
 import type { RouteRecord } from "../types";
 import { isArray } from "lodash";

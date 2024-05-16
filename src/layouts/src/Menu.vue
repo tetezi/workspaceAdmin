@@ -1,6 +1,6 @@
 <template>
     <ElMenu v-bind="bind" class="el-menu-vertical-demo">
-        <component :is="()=>getMenu(menuStore.menuList)"></component>
+        <component :is="() => getMenu(menuStore.menuList)"></component>
     </ElMenu>
 
 </template>
@@ -8,7 +8,7 @@
 import { useMenuStore, type Menu } from '@/stores/modules/menu';
 import { useSettingStore } from '@/stores/modules/setting';
 import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, } from 'vue-router';
 import BasicIcon from '@/components/Icon/BasicIcon.vue'
 import { ElMenuItem, ElSubMenu } from 'element-plus';
 

@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/modules/user";
-import { useRouter, type Router } from "vue-router";
+import { type Router } from "vue-router";
 import { PAGE } from "../constant";
 import { useMenuStore } from "@/stores/modules/menu";
 
@@ -13,15 +13,15 @@ function createMenuGuard(router: Router) {
     const token = userStore.getToken;
     if (to.path === PAGE.login) {
       next();
-      return 
+      return;
     }
     if (token) {
-      if (!menuStore.isCompleted) {  
+      if (!menuStore.isCompleted) {
         await menuStore.initPermissionMenu();
         next({ path: to.fullPath, replace: true, query: to.query });
         return;
       } else {
-        next(); 
+        next();
         return;
       }
     } else {

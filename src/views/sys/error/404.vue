@@ -6,7 +6,6 @@
     </el-result>
 </template>
 <script lang="tsx" setup>
-import { watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { PAGE } from '@/router/constant'
 import { BasicButton, } from 'ttz-ui';

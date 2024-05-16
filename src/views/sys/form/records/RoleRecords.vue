@@ -5,7 +5,7 @@
 </template>
 <script lang="tsx" setup>
 import Records from './Records.vue';
-import { BasicButton, useDialog, useForm, type TableColumn } from 'ttz-ui';
+import { BasicButton, useDialog, type TableColumn } from 'ttz-ui';
 import RoleDesigner from '../designer/RoleDesigner.vue';
 import { computed, ref } from 'vue';
 import { unref } from 'vue';

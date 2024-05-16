@@ -10,9 +10,7 @@ import { SaveTableRecord, GetTableRecord } from '@/api/sys/form';
 import { EmptyUUId } from '@/utils/uuid';
 import { useForm, type FormBind } from 'ttz-ui'
 import { ref } from 'vue';
-import { pick } from 'lodash';
 import { watch } from 'vue';
-import { message } from '@/utils/message';
 const props = defineProps<{
     id?: UUID,
     tableId: UUID
@@ -22,7 +20,7 @@ const emit = defineEmits<{
     submit: []
 }>()
 const loadingRef = ref(false)
-watch(() => props.id, async (a, b) => {
+watch(() => props.id, async () => {
     loadingRef.value = true
     if (props.id) {
         await GetTableRecord(props.id).then((res) => {
