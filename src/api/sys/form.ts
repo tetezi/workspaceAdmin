@@ -33,6 +33,22 @@ export async function GetTableRecord(recordId: UUID) {
 }
 
 /**
+ * 删除表单记录
+ */
+export async function DelTableRecord(recordId: UUID) {
+  return baseHttp.post(
+    {
+      url: "/Form/DelTableRecord",
+      params: { recordId },
+    },
+    {},
+    {
+      contentType: "JSON",
+    }
+  );
+}
+
+/**
  * 获取表单记录列表
  */
 export async function GetTableRecordPage(

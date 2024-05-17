@@ -8,7 +8,8 @@
 
 </template>
 <script lang="tsx" setup>
-import { GetTableRecordPage } from '@/api/sys/form';
+import { DelTableRecord, GetTableRecordPage } from '@/api/sys/form';
+import { message, messageBoxConfirm } from '@/utils/message';
 import { useTable, BasicButton, useDialog, type TableColumn, } from 'ttz-ui';
 import { type Component, type VNodeChild, ref, unref, h } from 'vue';
 const props = defineProps<{
@@ -54,17 +55,23 @@ const [TableComp, tableMethods] = useTable<Recordable>({
     actionColumn: (row) => {
         return <div>
             <BasicButton func={() => edit(row)}>编辑</BasicButton>
+            <BasicButton func={() => del(row)}>删除</BasicButton>
             {(props.actionColumn?.(row))}
         </div>
     },
     headerActionRender: <BasicButton func={add} type='primary'>新增</BasicButton>,
     title: props.title,
 })
+async function add() {
+    dialogMethods.open('')
+}
 async function edit(row) {
     dialogMethods.open(row.Id)
 }
-async function add() {
-    dialogMethods.open('')
+async function del(row) {
+    messageBoxConfirm(`确定要删除该记录吗？`, { title: '提示' }, async () => {
+        await DelTableRecord(row.Id)
+    })
 }
 defineExpose({
     reload: () => tableMethods.reload()

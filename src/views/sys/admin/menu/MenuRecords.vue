@@ -9,6 +9,7 @@
         <div>
             <BasicButton :func="add">新增</BasicButton>
             <BasicButton :func="edit">编辑</BasicButton>
+            <BasicButton :func="del">删除</BasicButton>
         </div>
 
     </div>
@@ -21,7 +22,8 @@ import { useDialog, BasicButton } from 'ttz-ui';
 import { unref, ref } from 'vue';
 import MenuTree from './components/MenuTree.vue'
 import MenuForm from './components/MenuForm.vue'
-import { message } from '@/utils/message';
+import { message, messageBoxConfirm } from '@/utils/message';
+import { DelTableRecord } from '@/api/sys/form';
 
 const appId = ref<UUID>()
 const MenuTreeRef = ref()
@@ -59,7 +61,18 @@ function edit() {
             id: data.Id,
         })
     } else {
-        message('请先选择需要编辑的命令', 'warning')
+        message('请先选择需要编辑的菜单', 'warning')
+    }
+
+}
+function del() {
+    const data = unref(MenuTreeRef).getCurrent()
+    if (data) {
+        messageBoxConfirm(`确定要删除${data.Name}${(data.SubMenus || []).length > 0 ? '及其子菜单' : ''}吗？`, { title: '提示' }, async () => {
+            await DelTableRecord(data.Id)
+        })
+    } else {
+        message('请先选择需要删除的菜单', 'warning')
     }
 
 } 

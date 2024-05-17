@@ -8,13 +8,16 @@
     </el-tree>
 </template>
 <script lang="ts" setup>
-import { computed, unref, ref } from 'vue';
+import { computed, unref, ref, nextTick } from 'vue';
 import { BasicButton, useApi } from 'ttz-ui';
 import { GetAllMenu } from '@/api/sys/menus';
+import { onClickOutside } from '@vueuse/core';
 const props = defineProps<{
     appId: UUID
     selectType: 'check' | 'select'
 }>()
+
+
 const { dataRef, loadingRef, fetch: reloadMenuTree } = useApi({
     api: GetAllMenu,
     immediate: true,
@@ -45,6 +48,14 @@ const treeBind = computed(() => {
         },
     }
 })
+onClickOutside(treeRef, () => {
+    if (props.selectType === 'select') {
+        setTimeout(() => {
+            unref(treeRef).setCurrentKey(null)
+        }, 100);
+    }
+})
+
 function search(value) {
     unref(treeRef)!.filter(value)
 }
