@@ -7,12 +7,30 @@
 <script lang="tsx" setup>
 import { useMenuStore, type Menu } from '@/stores/modules/menu';
 import { useSettingStore } from '@/stores/modules/setting';
-import { computed } from 'vue';
+import { computed, unref } from 'vue';
 import { useRoute, } from 'vue-router';
-import BasicIcon from '@/components/Icon/BasicIcon.vue'
+import { BasicIcon } from 'ttz-ui'
 import { ElMenuItem, ElSubMenu } from 'element-plus';
+function calculateComplementaryColor(color) {
+    let hex = color.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
 
-const activeBackgroundColor = '#0960BD'
+    // 计算类白色
+    let lightR = Math.min(255, r + 50);
+    let lightG = Math.min(255, g + 50);
+    let lightB = Math.min(255, b + 50);
+
+    // 转换为十六进制表示
+    let lightHex = '#' +
+        ('0' + lightR.toString(16)).slice(-2) +
+        ('0' + lightG.toString(16)).slice(-2) +
+        ('0' + lightB.toString(16)).slice(-2);
+
+    return lightHex;
+}
+
 const textColor = '#E5E7EB'
 const route = useRoute()
 const menuStore = useMenuStore()
@@ -41,7 +59,7 @@ function getMenu(routes: Array<Menu>) {
             </ElSubMenu>
         } else {
             return <ElMenuItem index={Id} route={String(UrlLabel)} style={{
-                backgroundColor: isActive ? activeBackgroundColor : settingStore.menu.bgColor
+                backgroundColor: isActive ? calculateComplementaryColor(settingStore.menu.bgColor) : settingStore.menu.bgColor
             }}>
                 <BasicIcon icon='Location' />
                 <span>{Name} </span>

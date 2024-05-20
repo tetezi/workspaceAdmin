@@ -60,12 +60,12 @@ const actionColumn = computed(() => (row) => {
         setUserRoleDialogMethods.open({
             roleId: row.Id,
         })
-    }}>设置用户</BasicButton>,
+    }} type='primary'>设置用户</BasicButton>,
     <BasicButton func={() => {
         setRoleMenuDialogMethods.open({
             roleId: row.Id,
             appId: row.AppId,
         })
-    }}>设置菜单</BasicButton>]
+    }} type='success'>设置菜单</BasicButton>]
 }) 
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex">
-        <el-input v-model="filterText" @change="search" />
-        <BasicButton icon="Refresh" :func="reloadMenuTree"> </BasicButton>
+        <el-input v-model="filterText" @change="search" placeholder='输入菜单名称搜索' />
+        <BasicButton icon="Refresh" :func="reloadMenuTree" tip='刷新菜单'> </BasicButton>
     </div>
 
     <el-tree ref='treeRef' v-bind="treeBind" v-loading="loadingRef">
@@ -17,8 +17,11 @@ const props = defineProps<{
     selectType: 'check' | 'select'
 }>()
 
-
-const { dataRef, loadingRef, fetch: reloadMenuTree } = useApi({
+async function reloadMenuTree() {
+    filterText.value = ''
+    await fetch()
+}
+const { dataRef, loadingRef, fetch } = useApi({
     api: GetAllMenu,
     immediate: true,
     defaultData: [],

@@ -5,9 +5,7 @@
             <TabPane :key="PAGE.home" tab="首页" :closable="false"></TabPane>
             <TabPane v-for="item in tabStore.tabs" :key="item.path" :tab="item.title"></TabPane>
             <template #rightExtra>
-
-
-                <el-button-group style="margin:0 16px">
+                <el-button-group style="margin:0 5px">
                     <BasicButton icon="Refresh" :func="refreshHandle"> </BasicButton>
                     <el-dropdown>
                         <span class="user">
@@ -32,13 +30,8 @@ import { computed, watch, } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Meta } from '@/router/types'
 import { Tabs, TabPane } from 'ant-design-vue'
-// import "ant-design-vue/lib/tabs/style/css";
-// import "ant-design-vue/lib/dropdown/style/css";
 import { BasicButton } from 'ttz-ui'
 import { PAGE } from '@/router/constant';
-
-// import "ant-design-vue/lib/menu/style/css";
-// import "ant-design-vue/lib/button/style/css";
 const tabStore = useTabStore()
 const route = useRoute()
 const router = useRouter()

@@ -206,6 +206,6 @@ const actionColumn = computed(() => (row) => {
             title: `${row.Name}-${row.No}-调试`
         })
         debugDialogMethods.open(row)
-    }}>调试</BasicButton>
+    }} type='success'>调试</BasicButton>
 }) 
 </script>

@@ -55,7 +55,7 @@ const [TableComp, tableMethods] = useTable<Recordable>({
     actionColumn: (row) => {
         return <div>
             <BasicButton func={() => edit(row)}>编辑</BasicButton>
-            <BasicButton func={() => del(row)}>删除</BasicButton>
+            <BasicButton func={() => del(row)} type='danger'>删除</BasicButton>
             {(props.actionColumn?.(row))}
         </div>
     },

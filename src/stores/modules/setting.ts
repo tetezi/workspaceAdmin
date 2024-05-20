@@ -19,7 +19,7 @@ export const useSettingStore = defineStore({
     return {
       menu: {
         collapse: false,
-        bgColor: "#292D3E",
+        bgColor: "#667891",
       },
     };
   },

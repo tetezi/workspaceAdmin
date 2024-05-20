@@ -6,14 +6,22 @@
             <BasicButton v-else text icon="DArrowRight" :func="() => { settingStore.menu.collapse = false }">
             </BasicButton>
         </div>
-        <component :is='()=>userStore.getUserAvatar(24)'></component>
-        <el-button-group>
-            <BasicButton text>
+        <component :is='() => userStore.getUserAvatar(24)'></component>
+
+        <el-dropdown style="margin:0  5px">
+            <span>
                 {{ useUserStore().user?.name }}
-            </BasicButton>
-            <BasicButton text :func="logout">退出</BasicButton>
-            <BasicButton text icon="Setting" :func="() => dialogMethods.open()"> </BasicButton>
-        </el-button-group>
+            </span>
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item @click='logout'>
+                        退出
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
+        <BasicButton text icon="Setting" tip="设置" :func="() => dialogMethods.open()"> </BasicButton>
+        <BasicButton text :icon="iconsFullscreen" :func="toggle" tip="全屏"> </BasicButton>
     </div>
     <DialogComp>
         <SettingFormComp v-model="settingStore.$state"></SettingFormComp>
@@ -25,8 +33,12 @@ import { useSettingStore } from '@/stores/modules/setting';
 import { messageBoxConfirm } from '@/utils/message';
 import { BasicButton, useDialog, useForm } from 'ttz-ui';
 import { markRaw } from 'vue';
+import { useFullscreen } from '@vueuse/core'
+import iconsFullscreen from '@/assets/icons/Fullscreen.svg'
 const userStore = useUserStore()
 const settingStore = useSettingStore()
+const { toggle } = useFullscreen()
+
 const [SettingFormComp] = useForm({
     formSchemas: [
 
@@ -34,10 +46,7 @@ const [SettingFormComp] = useForm({
             category: 'Container', component: 'Card', componentProps: { title: '菜单配置' }, children: [
                 { field: ['menu', 'collapse'], label: '是否折叠', component: 'Switch' },
                 {
-                    field: ['menu', 'bgColor'], label: '背景颜色', component: markRaw(ElColorPicker),
-                    componentProps: {
-                        tabindex: 2
-                    }
+                    field: ['menu', 'bgColor'], label: '背景颜色', component: markRaw(ElColorPicker)
                 },
             ]
         },
@@ -59,10 +68,12 @@ const [DialogComp, dialogMethods] = useDialog({
     showActionBtns: false,
     width: 300
 })
+
 async function logout() {
     messageBoxConfirm('是否确认退出登录', { title: '提示' }, async () => {
         userStore.logout()
     })
 }
+
 </script>
 <style scoped></style>
