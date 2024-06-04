@@ -9,7 +9,7 @@ import { computed, unref } from 'vue';
 import { easyApiMap, type EasyApiKey } from '@/utils/http/easyApiMap';
 import { message } from '@/utils/message';
 import { GetSIData } from '@/api/sys/interface';
-import { isUndefined } from 'element-plus/es/utils/types.mjs';
+import { isUndefined } from "lodash";
 type Props = {
     configLabel: EasyApiKey
     initAutoSelectFirst?: boolean

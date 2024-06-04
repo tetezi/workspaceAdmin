@@ -6,7 +6,7 @@ import {
   type MessageBoxState,
 } from "element-plus";
 import { isFunction, isNumber, isObject, isString, omit } from "lodash";
-import { buildUUID } from "./uuid";
+import { buildUUID } from "ttz-ui";
 /** 消息提示
  * @param msg 字符串或带有message字段的对象
  * @param type 提示类型

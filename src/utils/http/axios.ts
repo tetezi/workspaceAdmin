@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import { merge } from "lodash";
 import { hooks } from "./hooks";
 import type { RequestOptions } from "./type";
-import { buildUUID } from "../uuid";
+import { buildUUID } from "ttz-ui";
 
 export class VAXios {
   //实际的请求实例
