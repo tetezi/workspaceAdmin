@@ -6,9 +6,8 @@
 
 </template>
 <script lang="tsx" setup>
-import { SaveTableRecord, GetTableRecord } from '@/api/sys/form';
-import { EmptyUUId } from '@/utils/uuid';
-import { useForm, type FormBind } from 'ttz-ui'
+import { SaveTableRecord, GetTableRecord } from '@/api/sys/form'; 
+import { EmptyUUId,useForm, type FormBind } from 'ttz-ui'
 import { ref } from 'vue';
 import { watch } from 'vue';
 const props = defineProps<{

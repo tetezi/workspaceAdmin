@@ -54,7 +54,6 @@ onMounted(() => {
     self.MonacoEnvironment = {
         getWorker(_, label) {
             let worker = new editorWorker()
-            console.log(211)
             if (label === 'json') {
                 worker = new jsonWorker()
             }

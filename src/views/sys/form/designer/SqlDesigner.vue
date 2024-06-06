@@ -2,10 +2,9 @@
     <Designer ref="designerRef" :id="props.id" :tableId :formProps></Designer>
 </template>
 <script lang="ts" setup>
-import { EmptyUUId } from '@/utils/uuid';
 import { pick } from 'lodash';
 import Designer from './Designer.vue';
-import type { FormBind } from 'ttz-ui';
+import { EmptyUUId, type FormBind } from 'ttz-ui';
 import { ref, unref } from 'vue';
 const tableId = `d1d0924b-c262-4989-ab40-65b28c539bf2`
 const props = defineProps<{

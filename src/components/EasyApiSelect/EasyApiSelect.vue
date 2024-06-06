@@ -13,8 +13,8 @@ import { isUndefined } from "lodash";
 type Props = {
     configLabel: EasyApiKey
     initAutoSelectFirst?: boolean
-    labelField: SelectProps<Option>['labelField']
-    valueField: SelectProps<Option>['valueField']
+    labelField?: SelectProps<Option>['labelField']
+    valueField?: SelectProps<Option>['valueField']
     isObject?: SelectProps<Option>['isObject']
     immediate?: ApiSelectProps<Params, Option>['immediate']
 }

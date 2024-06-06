@@ -6,8 +6,7 @@
 </template>
 <script lang="tsx" setup>
 import { SaveTableRecord, GetTableRecord } from '@/api/sys/form';
-import { EmptyUUId } from '@/utils/uuid';
-import { useForm, } from 'ttz-ui'
+import { useForm, EmptyUUId } from 'ttz-ui'
 import { pick } from 'lodash';
 import { ref } from 'vue';
 import { watch } from 'vue';
