@@ -17,11 +17,11 @@
     </div>
 </template>
 <script lang="tsx" setup>
-import { useForm, BasicButton, type DesignFormSchema } from 'ttz-ui';
-import Draggable from 'vuedraggable'
+import { useForm, BasicButton } from 'ttz-ui';
+import Draggable from 'vuedraggable';
 
 import CodeValueInput from './CodeValueInput.vue'
-import { ref, unref, computed, watch, getCurrentInstance } from 'vue';
+import { unref, computed, watch } from 'vue';
 import { cloneDeep } from 'lodash';
 import { isUnDef } from '@/utils/is';
 const emit = defineEmits<{
@@ -147,7 +147,7 @@ const [FormComp, formMethods] = useForm({
                 {
                     field: 'children', label: '子元素', component: 'Input', render: ({ compValue }) => {
 
-                        return <Draggable style="width: 100%;min-height: 100px;line-height: 1rem" item-key="schemaKey" group={{ name: 'formSchemas', pull: false, put: true }} modelValue={unref(compValue)} onUpdate:modelValue={(v) => compValue.value = v}>
+                        return <Draggable style="width: 100%;min-height: 100px;line-height: 1rem" item-key="schemaKey" group={{ name: 'foASDrmSchemas', pull: false, put: true }} modelValue={unref(compValue)} onUpdate:modelValue={(v) => compValue.value = v}>
                             {{
                                 item: ({ element }) => {
                                     return <div style={{

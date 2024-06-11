@@ -8,7 +8,8 @@
         <div style="height: 100%; width:65%;border: 1px solid black;box-sizing: border-box">
             <div style="height: 100%; display: flex;flex-direction: column;">
                 <div style="display:flex;">
-                    <!-- <BasicButton style="flex:1" :func="switchDrag" type="primary">切换调试模式</BasicButton> -->
+                    <BasicButton style="flex:1" :func="switchDrag" type="primary">{{ isDesign ? '关闭' : '启用' }}拖拽模式
+                    </BasicButton>
                     <BasicButton style="flex:1" :func="importConfig" type="primary">导入</BasicButton>
                     <BasicButton style="flex:1" :func="exportConfig" type="success">导出</BasicButton>
                     <BasicButton style="flex:1" :func="clearConfig" type="danger">清空</BasicButton>
@@ -54,8 +55,9 @@ const selectedSchema = computed(() => {
     return unref(isOk) ? unref(formMethods.selectedSchema) : undefined
 })
 const selectedParentSchema = computed(() => {
-    if (unref(isOk)) {
-        return formMethods.getParentSchema(unref(selectedSchema)?.schemaKey)
+    const { schemaKey } = unref(selectedSchema) || {}
+    if (schemaKey) {
+        return formMethods.getParentSchema(schemaKey)
 
     } else {
         return undefined

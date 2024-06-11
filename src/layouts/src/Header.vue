@@ -35,6 +35,7 @@ import { BasicButton, useDialog, useForm } from 'ttz-ui';
 import { markRaw } from 'vue';
 import { useFullscreen } from '@vueuse/core'
 import iconsFullscreen from '@/assets/icons/Fullscreen.svg'
+import { ElColorPicker } from 'element-plus';
 const userStore = useUserStore()
 const settingStore = useSettingStore()
 const { toggle } = useFullscreen()
@@ -46,7 +47,7 @@ const [SettingFormComp] = useForm({
             category: 'Container', component: 'Card', componentProps: { title: '菜单配置' }, children: [
                 { field: ['menu', 'collapse'], label: '是否折叠', component: 'Switch' },
                 {
-                    field: ['menu', 'bgColor'], label: '背景颜色', component: markRaw(ElColorPicker)
+                    field: ['menu', 'bgColor'], label: '背景颜色', component: () => (ElColorPicker)
                 },
             ]
         },

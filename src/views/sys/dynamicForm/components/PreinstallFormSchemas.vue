@@ -36,7 +36,7 @@
 
 import { cloneDeep } from 'lodash';
 import { ref } from 'vue';
-import Draggable from 'vuedraggable'
+import Draggable from 'vuedraggable';
 import { buildUUID, } from 'ttz-ui';
 const preinstall = [
     {

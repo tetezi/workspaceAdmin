@@ -73,7 +73,7 @@ onMounted(() => {
     editInstance = monaco.editor.create(unref(editorContainer) as HTMLElement, {
         // value: unref(modelValue), // 编辑器的值
         // language: props.language, //语言
-        model: monaco.editor.createModel(unref(modelValue), 'typescript'),
+        model: monaco.editor.createModel(unref(modelValue) || '', 'typescript'),
         theme: 'vs-dark', // 编辑器主题：vs, hc-black, or vs-dark
         // autoIndent: true, // 自动缩进
         readOnly: false, // 是否只读 

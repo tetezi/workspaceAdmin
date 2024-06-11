@@ -22,7 +22,7 @@ const formProps: FormBind = {
         },
         { field: 'Name', label: '名称', component: 'Input' },
         {
-            field: 'AppId', label: 'AppId', component: markRaw(EasyApiSelect), componentProps: {
+            field: 'AppId', label: 'AppId', component: () => (EasyApiSelect), componentProps: {
                 configLabel: 'Init_应用列表', valueField: 'Id', labelField: 'Name', initAutoSelectFirst: true, immediate: true
             }
         },
