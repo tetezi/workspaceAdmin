@@ -1,8 +1,8 @@
 import {
   handleCancelOfBefore,
   handleCancelOfFinally,
-  handleCheckStatusCode,
-  handleErrorMessageMode,
+  handleSuccess,
+  handleError,
   handleParamsSerializer,
   handleHeaders,
   handleResponsePath,
@@ -19,14 +19,14 @@ export const hooks: RequestHooks = {
     return req;
   },
   thenHooks: async (res, axiosConfig, requestOptions) => {
-    res = await handleCheckStatusCode(res, axiosConfig, requestOptions);
+    res = await handleSuccess(res, axiosConfig, requestOptions);
     res = await handleResponsePath(res, axiosConfig, requestOptions);
     return res;
   },
   catchHooks: async (err, axiosConfig, requestOptions) => {
     const isCancel = isCancelAxios(err);
     if (!isCancel) {
-      err = await handleErrorMessageMode(err, axiosConfig, requestOptions);
+      err = await handleError(err, axiosConfig, requestOptions);
     }
     return err;
   },

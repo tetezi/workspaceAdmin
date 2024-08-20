@@ -23,20 +23,59 @@ export async function SetRoleUser(
 /**
  * 设置角色菜单
  */
-export async function SetRoleMenu(
-  params: {
-    roleId: UUID;
-  },
-  menuIds: UUID[]
-) {
+export async function SetRoleMenus(params: { id: UUID; menuIds: UUID[] }) {
   return baseHttp.post(
     {
-      url: "/Account/SetRoleMenu",
-      params,
+      url: "/role/setRoleMenus",
     },
-    menuIds,
+    params
+  );
+}
+
+export async function SaveRole(params: {
+  id?: UUID;
+  name: string;
+  description?: string;
+}) {
+  return baseHttp.post(
     {
-      contentType: "JSON",
-    }
+      url: "/role/saveRole",
+    },
+    params
+  );
+}
+export async function GetRole(id: UUID) {
+  return baseHttp.get(
+    {
+      url: "/role/getRole",
+    },
+    { id }
+  );
+}
+export async function GetRoles(params: {
+  pageIndex: number;
+  pageSize: number;
+}) {
+  return baseHttp.get(
+    {
+      url: "/role/getRoles",
+    },
+    params
+  );
+}
+export async function DelRole(id: UUID) {
+  return baseHttp.post(
+    {
+      url: "/role/delRole",
+    },
+    { id }
+  );
+}
+export async function GetMenusByRoleId(params: { id: UUID }) {
+  return baseHttp.get(
+    {
+      url: "/role/getMenusByRoleId",
+    },
+    params
   );
 }

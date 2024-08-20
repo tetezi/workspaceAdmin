@@ -16,32 +16,19 @@ export enum ContentTypeEnum {
   FORM_DATA = "multipart/form-data;charset=UTF-8",
 }
 // 状态码检查
-export const handleCheckStatusCode: RequestHooks["thenHooks"] = async (
+export const handleSuccess: RequestHooks["thenHooks"] = async (
   res,
-  _axiosConfig,
+  axiosConfig,
   requestOptions
 ) => {
-  const { checkStatusCode } = requestOptions;
-  async function checkStatusCodeByType(res: AxiosResponse) {
-    if (res.data.type === 1) {
-      return res;
-    } else if (res.data.type === 10) {
-      router.replace(PAGE.login);
-      return Promise.reject({
-        _errMessage: res.data.msg,
-        ...res.data,
-      });
-    } else {
-      return Promise.reject({
-        _errMessage: res.data.msg,
-        ...res.data,
-      });
-    }
+  const { successHandler } = requestOptions;
+  async function successHandlerByTTZ(res: AxiosResponse) {
+    return res;
   }
-  if (isFunction(checkStatusCode)) {
-    return await checkStatusCode(res);
-  } else if (checkStatusCode === "type") {
-    return await checkStatusCodeByType(res);
+  if (isFunction(successHandler)) {
+    return await successHandler(res, axiosConfig, requestOptions);
+  } else if (successHandler === "TTZ") {
+    return await successHandlerByTTZ(res);
   } else {
     return res;
   }
@@ -51,58 +38,66 @@ export function isCancelAxios(err: any): boolean {
   return err.code === "ERR_CANCELED";
 }
 // 错误提示类型
-export const handleErrorMessageMode: RequestHooks["catchHooks"] = (
+export const handleError: RequestHooks["catchHooks"] = async (
   error,
   axiosConfig,
   requestOptions
 ) => {
-  let errMessage = error._errMessage;
-  if (!errMessage) {
-    const { code, message: msg } = error || {};
-    const err: string = error?.toString?.() ?? "";
-    const checkStatus = (status: number) => {
-      const statusMsg = {
-        "400": "请求错误",
-        "401": "未授权，请重新登录",
-        "403": "拒绝访问",
-        "404": `请求地址出错`,
-        "408": "请求超时",
-        "500": "服务器内部错误",
-        "501": "服务未实现",
-        "502": "网关错误",
-        "503": "服务不可用",
-        "504": "网关超时",
-        "505": "HTTP版本不受支持",
-      };
-      return get(statusMsg, status, "");
+  const { errorHandler } = requestOptions;
+  if (isFunction(errorHandler)) {
+    return await errorHandler(error, axiosConfig, requestOptions);
+  } else if (errorHandler === "TTZ") {
+    const getErrorMsg = function (error) {
+      const { response, code } = error;
+      if (response) {
+        const { status, statusText, data } = response;
+        if (data) {
+          return data.message;
+        } else {
+          const statusMsg = {
+            "400": "请求错误",
+            "401": "未授权，请重新登录",
+            "403": "拒绝访问",
+            "404": `请求地址出错`,
+            "408": "请求超时",
+            "500": "服务器内部错误",
+            "501": "服务未实现",
+            "502": "网关错误",
+            "503": "服务不可用",
+            "504": "网关超时",
+            "505": "HTTP版本不受支持",
+          };
+          return get(statusMsg, status, statusText);
+        }
+      } else {
+        const codeMsg = {
+          ERR_NETWORK: "网络异常，请检查您的网络连接是否正常!",
+          ECONNABORTED: "接口请求超时,请刷新页面重试!",
+        };
+        return get(codeMsg, code, "发生未知错误，请联系管理员");
+      }
     };
-    if (code === "ECONNABORTED" && msg.indexOf("timeout") !== -1) {
-      errMessage = "接口请求超时,请刷新页面重试!";
-    } else if (err?.includes("Network Error")) {
-      errMessage = "网络异常，请检查您的网络连接是否正常!	";
-    } else {
-      const status: any = get(error, "response.status");
-      errMessage = checkStatus(status);
+    if (error.response?.status === 401) {
+      router.replace(PAGE.login);
     }
+    const errMessage = getErrorMsg(error);
+    if (requestOptions.errorMessageMode === "message") {
+      message(
+        {
+          title: "接口请求失败",
+          url: (axiosConfig.baseURL || "") + (axiosConfig.url || ""),
+          message: errMessage,
+          error: omit(error, ["_errMessage"]),
+        },
+        "error"
+      );
+    } else if (requestOptions.errorMessageMode === "log") {
+      console.log(errMessage, error);
+    }
+    return error;
+  } else {
+    return error;
   }
-  if (!errMessage) {
-    errMessage = "发生未知错误，请联系管理员";
-  }
-
-  if (requestOptions.errorMessageMode === "message") {
-    message(
-      {
-        title: "接口请求失败",
-        url: (axiosConfig.baseURL || "") + (axiosConfig.url || ""),
-        message: errMessage,
-        error: omit(error, ["_errMessage"]),
-      },
-      "error"
-    );
-  } else if (requestOptions.errorMessageMode === "log") {
-    console.log(errMessage, error);
-  }
-  return error;
 };
 
 // 请求撤销
@@ -166,7 +161,11 @@ export const handleHeaders: RequestHooks["beforeHooks"] = (
   }
   if (withToken) {
     const userStroe = useUserStore();
-    set(axiosConfig, ["headers", "Access-Token"], userStroe.getToken);
+    set(
+      axiosConfig,
+      ["headers", "Authorization"],
+      `Bearer ${userStroe.getToken}`
+    );
   }
   return axiosConfig;
 };

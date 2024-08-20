@@ -20,7 +20,8 @@ export function createAxios(
       allowDots: false,
     },
     errorMessageMode: "message",
-    checkStatusCode: undefined,
+    successHandler: "TTZ",
+    errorHandler: "TTZ",
     contentType: "FORM",
     withToken: true,
   };
@@ -33,6 +34,6 @@ export const baseHttp = createAxios(
   {
     baseURL: import.meta.env.VITE_APP_BASE_API_URL,
   },
-  { checkStatusCode: "type", responsePath: "data.data" }
+  { successHandler: "TTZ", responsePath: "data.data" }
 );
 export const unKnownHttp = createAxios({});

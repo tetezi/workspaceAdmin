@@ -2,8 +2,6 @@
 
     <div style="display: flex;justify-content: space-between">
         <div>
-            <EasyApiSelect configLabel="Init_应用列表" v-model="appId" valueField='Id' labelField='Name' style="width:150px"
-                :initAutoSelectFirst="true" :immediate="true"></EasyApiSelect>
         </div>
 
         <div>
@@ -13,7 +11,7 @@
         </div>
 
     </div>
-    <MenuTree v-if="appId" :appId="appId" ref="MenuTreeRef" selectType="select"></MenuTree>
+    <MenuTree ref="MenuTreeRef" selectType="select"></MenuTree>
     <DialogComp>
     </DialogComp>
 </template>
@@ -23,16 +21,15 @@ import { unref, ref } from 'vue';
 import MenuTree from './components/MenuTree.vue'
 import MenuForm from './components/MenuForm.vue'
 import { message, messageBoxConfirm } from '@/utils/message';
-import { DelTableRecord } from '@/api/sys/form';
+import { getEnv } from '@/utils/env';
+import { DelMenu } from '@/api/sys/menus';
 
-const appId = ref<UUID>()
 const MenuTreeRef = ref()
 const [DialogComp, dialogMethods] = useDialog<{ id?: UUID, parentId?: UUID }>(() => {
     const designerRef = ref()
     return {
         bodyRender: ({ id, parentId }) => {
-            const _appId = unref(appId)
-            return _appId ? <MenuForm ref={designerRef} id={id} parentId={parentId} appId={_appId}></MenuForm> : ''
+            return <MenuForm ref={designerRef} id={id} parentId={parentId}   ></MenuForm>
         },
         submitApi: async () => {
             if (unref(designerRef).submit) {
@@ -51,26 +48,27 @@ function add() {
     const data = unref(MenuTreeRef).getCurrent()
 
     dialogMethods.open({
-        parentId: data?.Id
+        parentId: data?.id
     })
 }
 function edit() {
     const data = unref(MenuTreeRef).getCurrent()
     if (data) {
         dialogMethods.open({
-            id: data.Id,
+            id: data.id,
         })
     } else {
         message('请先选择需要编辑的菜单', 'warning')
     }
 
 }
-function del() {
+async function del() {
     const data = unref(MenuTreeRef).getCurrent()
     if (data) {
-        messageBoxConfirm(`确定要删除${data.Name}${(data.SubMenus || []).length > 0 ? '及其子菜单' : ''}吗？`, { title: '提示' }, async () => {
-            await DelTableRecord(data.Id)
+        await messageBoxConfirm(`确定要删除${data.name}${(data.subMenus || []).length > 0 ? '及其子菜单' : ''}吗？`, { title: '提示' }, async () => {
+            await DelMenu(data.id)
         })
+        unref(MenuTreeRef).reloadMenuTree()
     } else {
         message('请先选择需要删除的菜单', 'warning')
     }

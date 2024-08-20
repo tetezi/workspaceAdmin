@@ -10,8 +10,22 @@ export interface RequestOptions {
     | ((params: Recordable, options: any) => string);
   // 错误提示类型
   errorMessageMode?: false | "message" | "log";
-  // 状态码检查
-  checkStatusCode?: "type" | ((res: AxiosResponse<any>) => Promise<any>);
+  // 成功处理
+  successHandler?:
+    | "TTZ"
+    | ((
+        res: AxiosResponse,
+        axiosConfig: AxiosRequestConfig,
+        requestOptions: RequestOptions
+      ) => Promise<any>);
+  // 错误处理
+  errorHandler?:
+    | "TTZ"
+    | ((
+        error: any,
+        axiosConfig: AxiosRequestConfig,
+        requestOptions: RequestOptions
+      ) => Promise<any>);
   key?: UUID;
   /**
    * 传入方法遍历历史请求返回布尔值是否取消该历史请求

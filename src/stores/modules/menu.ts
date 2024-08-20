@@ -4,20 +4,20 @@ import type { RouteRecord } from "@/router/types";
 import { GetPermission } from "@/api/sys/menus";
 import { getEnv } from "@/utils/env";
 export type Menu = {
-  Id: UUID;
-  No: string;
-  Name: string;
+  id: UUID;
+  // No: string;
+  name: string;
+  routerPath: Nullable<string>;
+  // label: Nullable<string>;
+  type: "Iframe" | "View" | "Group";
+  url: Nullable<string>;
+  // Param: Nullable<string>;
 
-  UrlLabel: Nullable<string>;
-  Type: "Iframe" | "View" | "Group";
-  Url: Nullable<string>;
-  Param: Nullable<string>;
-
-  Sort: number;
-  ParentId: UUID;
-  AppId: UUID;
-  IsEnabled: boolean;
-  SubMenus: Menu[];
+  sort: number;
+  patentMenuId: UUID;
+  appId: UUID;
+  isEnabled: boolean;
+  subMenus: Menu[];
 };
 type State = {
   isCompleted: boolean;
@@ -66,22 +66,24 @@ export const useMenuStore = defineStore({
   getters: {
     getRouteByMenu(state): Array<RouteRecord> {
       function menuToRoute(menu: Menu): RouteRecord {
-        const children = (menu.SubMenus || []).map(menuToRoute);
+        const children = (menu.subMenus || []).map(menuToRoute);
         const result: any = {
           meta: {
-            title: menu.Name,
+            title: menu.name,
             cache: true,
           },
           children,
         };
-        if (menu.UrlLabel && menu.Url) {
-          result.path = menu.UrlLabel;
-          const component =
-            menu.Type === "View" ? dynamicImport(menu.Url) : undefined;
+        if (menu.routerPath && menu.url) {
+          result.path = menu.routerPath;
+          let component: any = undefined;
+          if (menu.type === "View") {
+            component = dynamicImport(menu.url);
+          }
           if (children.length > 0) {
             children.unshift({
-              alias: menu.UrlLabel,
-              path: `${menu.UrlLabel}/_index`,
+              alias: menu.routerPath,
+              path: `${menu.routerPath}/_index`,
               component,
               children: [],
             });
@@ -89,7 +91,7 @@ export const useMenuStore = defineStore({
             result.component = component;
           }
         } else {
-          result.path = menu.Id;
+          result.path = menu.id;
         }
         return result;
       }

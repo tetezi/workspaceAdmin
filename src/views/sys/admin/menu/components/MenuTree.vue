@@ -3,7 +3,6 @@
         <el-input v-model="filterText" @change="search" placeholder='输入菜单名称搜索' />
         <BasicButton icon="Refresh" :func="reloadMenuTree" tip='刷新菜单'> </BasicButton>
     </div>
-
     <el-tree ref='treeRef' v-bind="treeBind" v-loading="loadingRef">
     </el-tree>
 </template>
@@ -12,11 +11,11 @@ import { computed, unref, ref, nextTick } from 'vue';
 import { BasicButton, useApi } from 'ttz-ui';
 import { GetAllMenu } from '@/api/sys/menus';
 import { onClickOutside } from '@vueuse/core';
+import { getEnv } from '@/utils/env';
 const props = defineProps<{
-    appId: UUID
     selectType: 'check' | 'select'
 }>()
-
+// const appId = getEnv("VITE_APP_ID")
 async function reloadMenuTree() {
     filterText.value = ''
     await fetch()
@@ -25,36 +24,34 @@ const { dataRef, loadingRef, fetch } = useApi({
     api: GetAllMenu,
     immediate: true,
     defaultData: [],
-}, () => ({
-    appId: props.appId
-}))
+}, {})
 const treeRef = ref()
 const filterText = ref('')
 const treeBind = computed(() => {
     return {
-        nodeKey: 'Id',
+        nodeKey: 'id',
         data: unref(dataRef),
         highlightCurrent: props.selectType === 'select',
         defaultExpandAll: true,
         checkOnClickNode: true,
         showCheckbox: props.selectType === 'check',
         props: {
-            label: 'Name',
-            children: 'SubMenus'
+            label: 'name',
+            children: 'subMenus'
         },
         filterNodeMethod: (value, data) => {
             if (!value) return true
             if (data === unref(treeRef).getCurrentNode()) {
                 return true
             }
-            return data.Name.includes(value)
+            return data.name.includes(value)
         },
     }
 })
 onClickOutside(treeRef, () => {
     if (props.selectType === 'select') {
         setTimeout(() => {
-            unref(treeRef).setCurrentKey(null)
+            unref(treeRef)?.setCurrentKey(null)
         }, 100);
     }
 })

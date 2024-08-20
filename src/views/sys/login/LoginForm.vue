@@ -50,7 +50,6 @@ const [FormComponent, formMethods] = useForm({
         }
     },
     onSubmit: () => {
-        console.log(2111)
         router.replace(PAGE.home)
     }
 }) 

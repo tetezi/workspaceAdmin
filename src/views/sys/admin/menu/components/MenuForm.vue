@@ -10,28 +10,22 @@ import { useForm, EmptyUUId } from 'ttz-ui'
 import { pick } from 'lodash';
 import { ref } from 'vue';
 import { watch } from 'vue';
+import { GetMenu, SaveMenu } from '@/api/sys/menus';
 const props = defineProps<{
     id?: UUID,
     parentId?: UUID
-    appId: UUID
 }>()
 const emit = defineEmits<{
     submit: []
 }>()
-const tableId = `b3969c99-07ed-4f5a-ac2e-bcb2566f5465`
 const loadingRef = ref(false)
 
 const [FormComponent, formMethods] = useForm({
-    defaultValue: { Type: 'View' },
+    defaultValue: { type: 'View', isEnabled: true },
     formSchemas: [
+        { field: 'name', label: '名称', component: 'Input' },
         {
-            field: 'No', label: '编号', component: 'Input', ifShow: Boolean(props.id), componentProps: {
-                disabled: true
-            }
-        },
-        { field: 'Name', label: '名称', component: 'Input' },
-        {
-            field: 'Type', label: 'Type', component: 'Select', componentProps: {
+            field: 'type', label: '类型', component: 'Select', componentProps: {
                 options: [
                     { value: 'Iframe', label: 'Iframe(开发中)' },
                     { value: 'View', label: '视图页面' },
@@ -40,33 +34,30 @@ const [FormComponent, formMethods] = useForm({
             }
         },
         {
-            field: 'UrlLabel', label: '路由Path', component: 'Input', ifShow: ({ formValue }) => {
-                return formValue.Type !== 'Group'
+            field: 'routerPath', label: '路由Path', component: 'Input', ifShow: ({ formValue }) => {
+                return formValue.type !== 'Group'
             }
         },
         {
-            field: 'Url', label: '文件路径', component: 'Input', ifShow: ({ formValue }) => {
-                return formValue.Type !== 'Group'
+            field: 'url', label: '文件路径', component: 'Input', ifShow: ({ formValue }) => {
+                return formValue.type !== 'Group'
             }
         },
-        { field: 'Sort', label: 'Sort', component: 'InputNumber' },
-        // { field: 'ParentId', label: 'ParentId', component: 'Input' },
+        { field: 'sort', label: '排序', component: 'InputNumber' },
+        // { field: 'patentMenuId', label: 'patentMenuId', component: 'Input' },
 
-        // { field: 'AppId', label: 'AppId', component: 'Input' },
-        { field: 'Param', label: 'Param', component: 'Input' },
+        { field: 'isEnabled', label: '启用状态', component: 'Switch' },
+        { field: 'param', label: '参数', component: 'Input' },
+        { field: 'description', label: '备注', component: 'Input' },
 
     ],
     beforeSubmit: (raw) => {
         return {
-            ...pick(raw, ['Name', 'Url', 'Sort', 'ParentId', 'UrlLabel', 'Type', 'Param', 'AppId']),
+            ...pick(raw, ['name', 'url', 'sort', 'routerPath', 'type', 'param', 'description', 'isEnabled']),
         }
     },
     submitApi: async (params) => {
-        await SaveTableRecord(tableId, {
-            ...params,
-            AppId: props.appId,
-            Id: props.id || EmptyUUId
-        })
+        await SaveMenu({ id: props.id, parentMenuId: props.parentId, ...params })
     },
     onSubmit: () => {
         emit('submit')
@@ -75,11 +66,9 @@ const [FormComponent, formMethods] = useForm({
     watch([() => props.id, () => props.parentId], async () => {
         loadingRef.value = true
         if (props.id) {
-            await GetTableRecord(props.id).then((res) => {
-                formMethods.setModelValue(res)
+            await GetMenu(props.id).then((res) => {
+                formMethods.setModelValue(pick(res, ['name', 'url', 'sort', 'routerPath', 'type', 'param', 'description', 'isEnabled']))
             })
-        } else if (props.parentId) {
-            formMethods.setFieldsValue('ParentId', props.parentId)
         }
         loadingRef.value = false
     }, {

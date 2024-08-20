@@ -48,21 +48,21 @@ const bind = computed(() => ({
 }))
 function getMenu(routes: Array<Menu>) {
     return routes.map((item) => {
-        const { SubMenus, UrlLabel, Name, Id } = item
-        const isActive = route.path === UrlLabel
-        if (SubMenus && SubMenus.length > 0) {
-            return <ElSubMenu index={Id} >
+        const { subMenus, routerPath, name, id } = item
+        const isActive = route.path === routerPath
+        if (subMenus && subMenus.length > 0) {
+            return <ElSubMenu index={id} >
                 {{
-                    title: () => [<BasicIcon icon='Location' />, <span>{Name}</span>],
-                    default: () => getMenu(SubMenus)
+                    title: () => [<BasicIcon icon='Location' />, <span>{name}</span>],
+                    default: () => getMenu(subMenus)
                 }}
             </ElSubMenu>
         } else {
-            return <ElMenuItem index={Id} route={String(UrlLabel)} style={{
+            return <ElMenuItem index={id} route={String(routerPath)} style={{
                 backgroundColor: isActive ? calculateComplementaryColor(settingStore.menu.bgColor) : settingStore.menu.bgColor
             }}>
                 <BasicIcon icon='Location' />
-                <span>{Name} </span>
+                <span>{name} </span>
             </ElMenuItem>
         }
 

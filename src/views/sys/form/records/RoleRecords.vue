@@ -11,7 +11,6 @@ import { computed, ref } from 'vue';
 import { unref } from 'vue';
 import SetRoleUserForm from '../component/SetRoleUserForm.vue';
 import SetRoleMenuForm from '../component/SetRoleMenuForm.vue';
-const tableId = '193fc4e9-6956-4578-8cbf-46549c842484'
 const title = `角色配置表`
 const recordsRef = ref()
 const [SetRoleUserDialogComp, setUserRoleDialogMethods] = useDialog<{
