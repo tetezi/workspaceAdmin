@@ -56,3 +56,11 @@ declare type StringOfDateTime = string;
 declare type UUID = string;
 
 declare type MaybePromise<T = any> = T | Promise<T>;
+/**
+ * 带有分页属性的请求参数类型
+ * @template T 请求参数的基础类型
+ */
+declare type PaginatedRequest<T extends Recordable = {}> = T & {
+  pageIndex: number;
+  pageSize: number;
+};
