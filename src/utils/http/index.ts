@@ -22,7 +22,7 @@ export function createAxios(
     errorMessageMode: "message",
     successHandler: "TTZ",
     errorHandler: "TTZ",
-    contentType: "FORM",
+    contentType: "JSON",
     withToken: true,
   };
   return new VAXios(
