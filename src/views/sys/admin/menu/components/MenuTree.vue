@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex">
         <el-input v-model="filterText" @change="search" placeholder='输入菜单名称搜索' />
-        <BasicButton icon="Refresh" :func="reloadMenuTree" tip='刷新菜单'> </BasicButton>
+        <!-- <BasicButton icon="Refresh" :func="reloadMenuTree" tip='重置搜索条件'> </BasicButton> -->
     </div>
     <el-tree ref='treeRef' v-bind="treeBind" v-loading="loadingRef">
     </el-tree>
@@ -10,8 +10,7 @@
 import { computed, unref, ref, nextTick } from 'vue';
 import { BasicButton, useApi } from 'ttz-ui';
 import { GetAllMenu } from '@/api/sys/menus';
-import { onClickOutside } from '@vueuse/core';
-import { getEnv } from '@/utils/env';
+import { onClickOutside } from '@vueuse/core'; 
 const props = defineProps<{
     selectType: 'check' | 'select'
 }>()

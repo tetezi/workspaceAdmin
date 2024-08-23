@@ -4,7 +4,7 @@
 <script lang="ts" setup>
 import { useApi } from 'ttz-ui';
 import { ref, unref } from 'vue';
-import MenuTree from '@/views/sys/admin/menu/components/MenuTree.vue'
+import MenuTree from '../../menu/components/MenuTree.vue'
 import { GetMenusByRoleId, SetRoleMenus } from '@/api/sys/role';
 const MenuTreeRef = ref()
 const props = defineProps<{

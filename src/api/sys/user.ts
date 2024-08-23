@@ -7,3 +7,11 @@ export async function Login(params: { userNo: string; password: string }) {
     params
   );
 }
+export async function GetAllUsers(params: PaginatedRequest) {
+  return baseHttp.get(
+    {
+      url: "/user/getAllUsers",
+    },
+    params
+  );
+}

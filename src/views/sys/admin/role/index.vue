@@ -49,7 +49,7 @@ const [RoleTableComp, roleTableMethods] = useTable<Recordable>({
         }
     },
     headerActionRender: <BasicButton func={add} type='primary'>新增</BasicButton>,
-    title: `角色配置表`,
+    title: `角色管理表`,
 })
 
 const [SaveRoleDialogComp, saveRoleDialogMethods] = useDialog<string>(() => {
@@ -84,7 +84,8 @@ const [SetRoleUserDialogComp, setUserRoleDialogMethods] = useDialog<{
     const formRef = ref()
     return {
         width: '90%',
-        submitApi: async () => unref(formRef).submit(),
+        showActionBtns: false,
+        // submitApi: async () => unref(formRef).submit(),
         onClose: () => {
             roleTableMethods.reload()
         },
@@ -116,7 +117,7 @@ const [SetRoleMenuDialogComp, setRoleMenuDialogMethods] = useDialog<{
 async function add() {
     saveRoleDialogMethods.open(undefined)
 }
-async function edit(row) { 
+async function edit(row) {
     saveRoleDialogMethods.open(row.id)
 }
 async function del(row) {

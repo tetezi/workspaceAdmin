@@ -1,74 +1,54 @@
 <template>
-    <FormComp v-loading="loadingRef">
-    </FormComp>
+    <!-- <FormComp v-loading="loadingRef">
+    </FormComp> -->
+    <div v-loading="loadingRef">
+        <UserTableComp />
+    </div>
 </template>
 <script lang="ts" setup>
-import { useApi, useForm } from 'ttz-ui';
-import { SetRoleUser } from '@/api/sys/role';
-import { computed, unref } from 'vue';
-import { GetSIData } from '@/api/sys/interface';
-import { easyApiMap } from '@/utils/http/easyApiMap';
-import { isArray } from 'element-plus/es/utils/types.mjs';
+import { useApi, useTable, } from 'ttz-ui';
+import { AssignUsersToRole, GetRoleUsersByRoleId, RemoveUsersFromRole, } from '@/api/sys/role';
+import { GetAllUsers } from '@/api/sys/user';
+import { unref } from 'vue';
 const props = defineProps<
     {
         roleId: UUID
     }>()
-const { dataRef: unSelectedData, loadingRef: unSelectedDataLoadingRef } = useApi({
-    api: async (params) => {
-        return await GetSIData(easyApiMap['权限_角色未配置用户'], params)
+const [UserTableComp, userTableMethods] = useTable({
+    rowKey: 'id',
+    api: (params, pageParams) => GetAllUsers(pageParams),
+    immediate: true,
+    columns: [
+        { prop: 'userNo', label: '工号', },
+        { prop: 'name', label: '姓名', },
+        { prop: 'email', label: '邮箱', },
+        { prop: 'phone', label: '电话', },
+    ],
+    selectType: 'Check',
+    /**
+     * TODO: 选择调接口 用户连到角色，反之断开
+     */
+    onUnSelectRow: async (row) => {
+        await RemoveUsersFromRole({ id: props.roleId, userIds: [row.id] })
+        reloadRoleUsers()
     },
-    resultField: 'rows',
+    onSelectRow: async (row) => {
+        const isInRole = unref(roleUsers).some((roleUser) => { return roleUser.userId === row.id })
+        if (!isInRole) {
+            await AssignUsersToRole({ id: props.roleId, userIds: [row.id] })
+
+        }
+        reloadRoleUsers()
+    }
+})
+const { loadingRef, dataRef: roleUsers, fetch: reloadRoleUsers } = useApi({
+    api: GetRoleUsersByRoleId,
     immediate: true,
     defaultData: [] as Recordable[],
-}, () => ({
-    roleId: props.roleId
-}))
-const { loadingRef: selectedDataLoadingRef } = useApi({
-    api: async (params) => {
-        return await GetSIData(easyApiMap['权限_角色已分配用户'], params)
-    },
-    resultField: 'rows',
-    immediate: true,
-    defaultData: [] as Recordable[],
-    onChangeData: (data) => {
-        formMethods.setModelValue({
-            UserIds: isArray(data) ? data : []
-        })
+    onChangeData: async (data) => {
+        await userTableMethods.setSelectRows((data || []))
     }
 }, () => ({
-    roleId: props.roleId
-}))
-const loadingRef = computed(() => {
-    return unref(unSelectedDataLoadingRef) || unref(selectedDataLoadingRef)
-})
-const [FormComp, formMethods] = useForm(() => ({
-    defaultValue: {
-        UserIds: []
-    },
-    formSchemas: [
-        {
-            labelWidth: '0px',
-            field: 'UserIds', label: 'UserIds', component: 'TableTransfer', labelShow: false,
-            componentProps: {
-
-                unSelectedData: unref(unSelectedData) as any,
-                columns: [
-                    { prop: 'Name', label: 'Name', },
-                    { prop: 'UserNo', label: 'UserNo', }
-                ],
-                rowKey: 'UserId',
-                title: '用户列表'
-            }
-        },
-    ],
-    submitApi: async ({ UserIds }) => {
-        return await SetRoleUser({
-            roleId: props.roleId,
-        }, (UserIds || []).map(({ UserId }) => UserId))
-    },
-}))
-async function submit() {
-    return await formMethods.submitFunction()
-}
-defineExpose({ submit })
+    id: props.roleId
+})) 
 </script>
