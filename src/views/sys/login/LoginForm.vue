@@ -4,7 +4,7 @@
         <div style="text-align: center;font-size: 1.5rem;line-height: 2rem;font-weight: 700;margin-bottom:12px;">
             登录</div>
         <FormComponent></FormComponent>
-        <BasicButton :func="() => formMethods.submitFunction()" type="primary" style="width: 100%;" size="large">登录
+        <BasicButton :loading="loadingRef" :func="submit" type="primary" style="width: 100%;" size="large">登录
         </BasicButton>
     </div>
 </template>
@@ -15,6 +15,7 @@ import { message } from '@/utils/message';
 import { BasicButton, useForm } from 'ttz-ui';
 import { useRouter } from 'vue-router';
 import logo2 from '@/assets/images/logo2.png'
+import { ref } from 'vue';
 const router = useRouter()
 const userStore = useUserStore()
 const [FormComponent, formMethods] = useForm({
@@ -26,7 +27,7 @@ const [FormComponent, formMethods] = useForm({
             componentProps: {
                 size: 'large',
                 placeholder: '请输入账号',
-                onKeyupEnter: () => formMethods.submitFunction()
+                onKeyupEnter: submit
             }
         },
         {
@@ -36,7 +37,7 @@ const [FormComponent, formMethods] = useForm({
                 size: 'large',
                 placeholder: '请输入密码',
                 type: 'password',
-                onKeyupEnter: () => formMethods.submitFunction()
+                onKeyupEnter: submit
             }
         },
     ],
@@ -52,5 +53,12 @@ const [FormComponent, formMethods] = useForm({
     onSubmit: () => {
         router.replace(PAGE.home)
     }
-}) 
+})
+const loadingRef = ref(false)
+async function submit() {
+    loadingRef.value = true
+    return formMethods.submitFunction().finally(() => {
+        loadingRef.value = false
+    })
+}
 </script>
