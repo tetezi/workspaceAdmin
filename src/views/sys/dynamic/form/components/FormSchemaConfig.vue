@@ -136,8 +136,6 @@ const [FormComp, formMethods] = useForm({
 
             }
         },
-
-
         {
             category: 'Container', component: 'Card', componentProps: {
                 title: '容器类型组件配置'
