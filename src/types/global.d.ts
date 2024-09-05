@@ -61,6 +61,6 @@ declare type MaybePromise<T = any> = T | Promise<T>;
  * @template T 请求参数的基础类型
  */
 declare type PaginatedRequest<T extends Recordable = {}> = T & {
-  pageIndex: number;
-  pageSize: number;
+  pageIndex?: number;
+  pageSize?: number;
 };
