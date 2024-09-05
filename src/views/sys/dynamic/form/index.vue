@@ -41,8 +41,6 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicForm>({
 })
 const [TableComp, tableMethods] = useTable<Recordable>({
     rowKey: 'id',
-    selectType: 'Select',
-    showAllCheckbox: true,
     columns: [
         { prop: 'id', label: 'id' },
         { prop: 'name', label: '名称' },
