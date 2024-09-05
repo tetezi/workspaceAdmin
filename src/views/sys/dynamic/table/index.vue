@@ -117,9 +117,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
     onClosed: () => tableMethods.reload()
 })
 const [TableComp, tableMethods] = useTable<Recordable>({
-    rowKey: 'id',
-    selectType: 'Select',
-    showAllCheckbox: true,
+    rowKey: 'id', 
     columns: [
         { prop: 'id', label: 'id' },
         { prop: 'name', label: '名称' },
