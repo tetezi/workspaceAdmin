@@ -2,11 +2,9 @@
     <div v-loading="loadingRef">
         <FormComponent></FormComponent>
     </div>
-
 </template>
 <script lang="tsx" setup>
-import { SaveTableRecord, GetTableRecord } from '@/api/sys/form';
-import { useForm, EmptyUUId } from 'ttz-ui'
+import { useForm } from 'ttz-ui'
 import { pick } from 'lodash';
 import { ref } from 'vue';
 import { watch } from 'vue';
@@ -47,13 +45,13 @@ const [FormComponent, formMethods] = useForm({
         // { field: 'patentMenuId', label: 'patentMenuId', component: 'Input' },
 
         { field: 'isEnabled', label: '启用状态', component: 'Switch' },
-        { field: 'param', label: '参数', component: 'Input' },
+        // { field: 'param', label: '参数', component: 'Input' },
         { field: 'description', label: '备注', component: 'Input' },
 
     ],
     beforeSubmit: (raw) => {
         return {
-            ...pick(raw, ['name', 'url', 'sort', 'routerPath', 'type', 'param', 'description', 'isEnabled']),
+            ...pick(raw, ['name', 'url', 'sort', 'routerPath', 'type', /*'param', */ 'description', 'isEnabled']),
         }
     },
     submitApi: async (params) => {
@@ -67,7 +65,7 @@ const [FormComponent, formMethods] = useForm({
         loadingRef.value = true
         if (props.id) {
             await GetMenu(props.id).then((res) => {
-                formMethods.setModelValue(pick(res, ['name', 'url', 'sort', 'routerPath', 'type', 'param', 'description', 'isEnabled']))
+                formMethods.setModelValue(pick(res, ['name', 'url', 'sort', 'routerPath', 'type', /*'param', */'description', 'isEnabled']))
             })
         }
         loadingRef.value = false
