@@ -70,12 +70,14 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
                      *TODO 弹窗选择子表 
                      */
                     {
-                        label: '子表Id', prop: 'subTableId',
+                        label: '子表选择', prop: 'subTableId',
                         hide: ({ row }) => {
                             return row.colType !== 'SubTable'
                         },
                         editConfig: {
-                            component: 'Input'
+                            component: 'ApiSelect', componentProps: {
+                                api: GetDynamicTables, labelField: 'name', valueField: 'id', placeholder: '请选择轻代码数据表', immediate: true
+                            },
                         }
                     }, {
                         label: '子表写入策略', prop: 'subTableWritableStrategy', hide: ({ row }) => {
@@ -98,7 +100,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
                         }, editConfig: {
                             component: 'Select', componentProps: {
                                 options: [
-                                    { value: 'PartialObject', label: '部分对象' },
+                                    { value: 'PartialObject', label: '部分对象（开发中）' },
                                     { value: 'FullObject', label: '完整对象' },
                                 ]
                             }
