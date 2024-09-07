@@ -64,3 +64,11 @@ declare type PaginatedRequest<T extends Recordable = {}> = T & {
   pageIndex?: number;
   pageSize?: number;
 };
+/**
+ * 将T上P属性标记为可选，然后溢出R属性
+ */
+declare type MakePartialAndRemove<
+  T,
+  P extends keyof T = never,
+  R extends keyof Omit<T, P> = never,
+> = Omit<T, P | R> & Partial<Pick<T, P>>;

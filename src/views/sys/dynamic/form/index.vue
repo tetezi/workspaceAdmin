@@ -8,11 +8,11 @@
 
 </template>
 <script lang="tsx" setup>
-import { type DynamicForm, SaveDynamicForm, GetDynamicForms, GetDynamicForm, DelDynamicForm } from '@/api/sys/dynamic/form';
+import { type DynamicFormType, SaveDynamicForm, GetDynamicForms, GetDynamicForm, DelDynamicForm } from '@/api/sys/dynamic/form';
 import { messageBoxConfirm } from '@/utils/message';
 import { useTable, BasicButton, useDialogForm } from 'ttz-ui';
 import FormDesigner from './components/FormDesigner.vue'
-const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicForm>({
+const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormType, "id", 'schemas'> & { schemas: any[] }>({
     width: '90%',
     closeOnClickModal: false,
     formSchemas: [
@@ -28,14 +28,11 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicForm>({
             }
         },
     ],
-    beforeSubmit: (params) => {
-        return {
-            ...params,
-            schemas: JSON.stringify(params.schemas)
-        }
-    },
     submitApi: async (formData) => {
-        return SaveDynamicForm(formData)
+        return SaveDynamicForm({
+            ...formData,
+            schemas: JSON.stringify(formData.schemas)
+        })
     },
     onClosed: () => tableMethods.reload()
 })

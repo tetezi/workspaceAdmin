@@ -22,6 +22,11 @@ export type DynamicTable = {
     name: string;
     canWritable: boolean;
     canQuery: boolean;
+    colType: "String" | "Int" | "Boolean" | "Int" | "DateTime" | "SubTable";
+    subTableType?: "ToMany" | "ToOne";
+    subTableId?: UUID;
+    subTableWritableStrategy?: "UpsertByObject" | "ConnectById";
+    subTableQueryStrategy?: "PartialObject" | "FullObject";
   }[];
 };
 export async function SaveDynamicTable(params: DynamicTable) {

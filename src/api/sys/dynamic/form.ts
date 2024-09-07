@@ -1,9 +1,10 @@
 import { baseHttp } from "@/utils/http";
 
-export type DynamicForm = {
-  id?: UUID;
+export type DynamicFormType = {
+  id: UUID;
   name: string;
-  schemas: any[];
+  beforeSubmit?: string;
+  schemas: string;
   description?: string;
 };
 export async function GetDynamicForms(params: PaginatedRequest) {
@@ -16,15 +17,16 @@ export async function GetDynamicForms(params: PaginatedRequest) {
 }
 
 export async function GetDynamicForm(id: UUID) {
-  return baseHttp.get(
+  return baseHttp.get<DynamicFormType>(
     {
       url: "/dynamic/form/getForm",
     },
     { id }
   );
 }
-
-export async function SaveDynamicForm(params: DynamicForm) {
+export async function SaveDynamicForm(
+  params: MakePartialAndRemove<DynamicFormType, "id">
+) {
   return baseHttp.post(
     {
       url: "/dynamic/form/saveForm",
