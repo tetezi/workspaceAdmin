@@ -49,7 +49,12 @@ const preinstall = [
             }, {
                 alias: '基础下拉框', component: 'Select', category: 'Input', componentProps: {
                     type: 'code',
-                    code: `return {options:[{label:'选项一',value:1},{label:'选项二',value:2}]}`
+                    code: `return {
+    options:[
+        {label:'选项一',value:1},
+        {label:'选项二',value:2}
+    ]
+}`
                 },
             }, {
                 alias: 'Api下拉框', component: 'ApiSelect', category: 'Input', componentProps: {
