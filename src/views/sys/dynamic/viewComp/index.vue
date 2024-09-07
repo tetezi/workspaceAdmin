@@ -15,7 +15,7 @@ import { pick } from 'lodash';
 import { GetDynamicForms } from '@/api/sys/dynamic/form';
 import { GetDynamicTables } from '@/api/sys/dynamic/table';
 
-const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormViewComp, "id", 'columns'> & { columns: any[] }>({
+const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormViewComp, "id", 'tableColumns'> & { tableColumns: any[] }>({
     labelWidth: '100px',
     width: '90%',
     closeOnClickModal: false,
@@ -34,7 +34,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
                 field: 'dynamicTableId', label: '轻代码数据表', component: 'ApiSelect', componentProps: ({ formMethods }) => ({
                     api: GetDynamicTables, labelField: 'name', valueField: 'id', placeholder: '请选择轻代码数据表', immediate: true,
                     onChange: (id, dynamicTable) => {
-                        formMethods.setFieldsValue('columns', (dynamicTable.cols || []).map((col) => {
+                        formMethods.setFieldsValue('tableColumns', (dynamicTable.cols || []).map((col) => {
                             return { prop: col.name, label: col.name, width: '', showOverflowTooltip: false, transform: '' }
                         }))
                     }
@@ -53,7 +53,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
             }]
         },
         {
-            field: 'columns', label: '表格列配置', component: 'EditableTable', componentProps: {
+            field: 'tableColumns', label: '表格列配置', component: 'EditableTable', componentProps: {
                 columns: [
                     {
                         prop: 'prop', label: '字段名', editConfig: {
@@ -89,7 +89,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
     submitApi: async (formData) => {
         return SaveDynamicFormViewComp({
             ...formData,
-            columns: JSON.stringify(formData.columns)
+            tableColumns: JSON.stringify(formData.tableColumns)
         })
     },
     onClosed: () => tableMethods.reload()
@@ -115,13 +115,13 @@ const [TableComp, tableMethods] = useTable<Recordable>({
     title: '表单视图组件管理',
 })
 async function add() {
-    dialogFormMethods.open({ name: '', dataSourceType: 'DynamicTable', formSourceType: 'DynamicForm', columns: [] })
+    dialogFormMethods.open({ name: '', dataSourceType: 'DynamicTable', formSourceType: 'DynamicForm', tableColumns: [] })
 }
 async function edit(row) {
     const tableData = await GetDynamicFormViewComp(row.id)
     dialogFormMethods.open({
         ...pick(tableData, ['id', 'name', 'dataSourceType', 'formSourceType', 'dynamicTableId', 'dynamicFormId']),
-        columns: JSON.parse(tableData.columns)
+        tableColumns: JSON.parse(tableData.tableColumns)
     })
 }
 async function del(row) {

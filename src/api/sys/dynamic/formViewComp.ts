@@ -3,7 +3,7 @@ import { baseHttp } from "@/utils/http";
 export type DynamicFormViewComp = {
   id: UUID;
   name: string;
-  columns: string;
+  tableColumns: string;
   dataSourceType: string;
   dynamicTableId?: UUID;
   formSourceType: string;
