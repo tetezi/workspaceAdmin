@@ -49,10 +49,10 @@ export const LoginRoute: RouteRecord = {
 };
 
 /**
- * 404
+ * 重定向
  */
 export const RedirectRoute: RouteRecord = {
-  path: "/redirect",
+  path: PAGE.redirect,
   name: "redirect",
   redirect: "/redirect/index",
   component: LAYOUT,
@@ -77,6 +77,7 @@ export const PageNotFoundRoute: RouteRecord = {
   },
   children: [
     {
+      alias: PAGE.notFound,
       path: "/:path(.*)*",
       name: "404",
       component: () => import("@/views/sys/error/404.vue"),

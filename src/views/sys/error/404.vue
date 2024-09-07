@@ -11,8 +11,7 @@ import { PAGE } from '@/router/constant'
 import { BasicButton, } from 'ttz-ui';
 
 const router = useRouter()
-function back() {
-    console.log('aa', router)
+function back() { 
     router.replace(PAGE.home)
 }
 </script>
