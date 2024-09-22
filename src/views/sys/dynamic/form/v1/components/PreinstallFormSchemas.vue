@@ -36,8 +36,9 @@
 
 import { cloneDeep, omit } from 'lodash';
 import { ref } from 'vue';
-import Draggable from 'vuedraggable';
-import { buildUUID } from 'ttz-ui';
+import Draggable from 'vuedraggable'; 
+import { buildUUID } from "@/utils/uuid";
+
 const preinstall = [
     {
         title: '输入', name: '1', list: [
@@ -162,8 +163,7 @@ const preinstall = [
                 ]
             }, {
                 alias: '分栏', component: 'Row',
-                category: 'Container',
-                draggableTag: 'el-row',
+                category: 'Container', 
                 children: [{
                     component: 'Input', category: 'Input', colProps: {
                         span: 12
@@ -188,10 +188,7 @@ function clone(raw) {
         } : undefined
         const inputConfig = (config.category === 'Input') ? {
             field: `${config.component}_${buildUUID()}`,
-            label: {
-                type: 'value',
-                value: config.component
-            },
+            label: config.component,
             labelShow: {
                 type: 'value',
                 value: true

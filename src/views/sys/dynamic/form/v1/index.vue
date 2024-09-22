@@ -8,11 +8,12 @@
 
 </template>
 <script lang="tsx" setup>
-import { type DynamicFormType, SaveDynamicForm, GetDynamicForms, GetDynamicForm, DelDynamicForm } from '@/api/sys/dynamic/form';
+import { SaveDynamicForm, GetDynamicForms, GetDynamicForm, DelDynamicForm } from '@/api/sys/dynamic/form';
 import { messageBoxConfirm } from '@/utils/message';
 import { useTable, BasicButton, useDialogForm } from 'ttz-ui';
 import FormDesigner from './components/FormDesigner.vue'
-const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormType, "id", 'schemas'> & { schemas: any[] }>({
+import type { DynamicFormType } from '@/components/DynamicFormDialog/types';
+const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormType, "id">>({
     width: '90%',
     closeOnClickModal: false,
     formSchemas: [
@@ -28,12 +29,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
             }
         },
     ],
-    submitApi: async (formData) => {
-        return SaveDynamicForm({
-            ...formData,
-            schemas: JSON.stringify(formData.schemas)
-        })
-    },
+    submitApi: SaveDynamicForm,
     onClosed: () => tableMethods.reload()
 })
 const [TableComp, tableMethods] = useTable<Recordable>({
@@ -54,17 +50,14 @@ const [TableComp, tableMethods] = useTable<Recordable>({
         </div>
     },
     headerActionRender: () => <BasicButton func={add} type='primary'>新增</BasicButton>,
-    title: '表单管理',
+    title: '表单管理v1',
 })
 async function add() {
     dialogFormMethods.open({ name: '', schemas: [] })
 }
 async function edit(row) {
     const tableData = await GetDynamicForm(row.id)
-    dialogFormMethods.open({
-        ...tableData,
-        schemas: JSON.parse(tableData.schemas)
-    })
+    dialogFormMethods.open(tableData)
 }
 async function del(row) {
     await messageBoxConfirm(`确定要删除该记录吗？`, { title: '提示' }, async () => {

@@ -51,9 +51,7 @@ const [FormComp, formMethods] = useForm({
                     }
                 },
                 {
-                    field: 'label', label: '字段名', component: () => CodeValueInput, componentProps: {
-                        valueComponent: 'Input',
-                    }
+                    field: 'label', label: '字段名', component: 'Input',
                 },
 
                 // {
@@ -80,7 +78,7 @@ const [FormComp, formMethods] = useForm({
                         { label: '容器', value: 'Container' },
                         { label: '输入', value: 'Input' },
                         { label: '仅展示', value: 'Display' },
-                    ]
+                    ],
                 },
                 colProps: {
                     span: 12
