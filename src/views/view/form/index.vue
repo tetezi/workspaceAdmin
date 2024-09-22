@@ -6,7 +6,7 @@
                 :dynamicFormId="dynamicFormViewCompRef.dynamicFormId" :submitFunc="submitFunc">
             </FormComp>
             <TableComp ref="TableCompRef" style="padding:8 16px" :title="dynamicFormViewCompRef.name" :viewCompMethods
-                :dataSourceType="dynamicFormViewCompRef.dataSourceType" :columns="dynamicFormViewCompRef.columns"
+                :dataSourceType="dynamicFormViewCompRef.dataSourceType" :columns="dynamicFormViewCompRef.tableColumns"
                 :dynamicTableId="dynamicFormViewCompRef.dynamicTableId" :add="addFunc" :edit="editFunc" :del="delFunc">
             </TableComp>
         </template>
@@ -18,10 +18,9 @@
 </template>
 <script lang="ts" setup>
 import { GetDynamicFormViewComp } from '@/api/sys/dynamic/formViewComp';
-import { computed, ref, unref, watchEffect } from 'vue';
+import { ref, unref, watchEffect } from 'vue';
 import TableComp from './components/table/index.vue';
-import FormComp from './components/form/index.vue';
-const testId = `1e4c8628-e712-4557-a07d-b20a6b58c748`
+import FormComp from './components/form/index.vue'; 
 const props = defineProps<{
     dynamicFormViewCompId?: UUID
 }>()
@@ -30,15 +29,13 @@ const dynamicFormViewCompRef = ref()
 const FormCompRef = ref()
 const TableCompRef = ref()
 watchEffect(async () => {
-    if (testId) {
+    if (props.dynamicFormViewCompId) {
         loadingRef.value = true
-        dynamicFormViewCompRef.value = await GetDynamicFormViewComp(testId).finally(() => { loadingRef.value = false }).then((res) => {
-            return { ...res, columns: JSON.parse(res.columns) }
-        })
+        dynamicFormViewCompRef.value = await GetDynamicFormViewComp(props.dynamicFormViewCompId).finally(() => { loadingRef.value = false })
     }
 })
 function addFunc() {
-    unref(FormCompRef).open({})
+    unref(FormCompRef).open()
 }
 async function editFunc(row) {
     const data = await unref(TableCompRef).getRecored(row.id)
