@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import { merge } from "lodash";
 import { hooks } from "./hooks";
 import type { RequestOptions } from "./type";
-import { buildUUID } from "ttz-ui";
+import { buildUUID } from "@/utils/uuid";
 
 export class VAXios {
   //实际的请求实例
@@ -20,21 +20,21 @@ export class VAXios {
   getAxiosInstance(): AxiosInstance {
     return this.axiosInstance;
   }
-  get<T = any, P = Recordable>(
+  get = <T = any, P = Recordable>(
     config: AxiosRequestConfig,
     params: P,
     options?: Partial<RequestOptions>
-  ): Promise<T> {
+  ): Promise<T> => {
     return this.request<T>({ ...config, method: "GET", params }, options);
-  }
+  };
 
-  post<T = any, P = Recordable>(
+  post = <T = any, P = Recordable>(
     config: AxiosRequestConfig,
     data: P,
     options?: Partial<RequestOptions>
-  ): Promise<T> {
+  ): Promise<T> => {
     return this.request<T>({ ...config, method: "POST", data }, options);
-  }
+  };
   //请求
   async request<T = any>(
     axiosConfig: AxiosRequestConfig,
