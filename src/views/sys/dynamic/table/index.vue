@@ -9,11 +9,13 @@
 </template>
 <script lang="tsx" setup>
 import { GetDynamicTables, GetDynamicTable, SaveDynamicTable, DelDynamicTable, type DynamicTable } from '@/api/sys/dynamic/table';
+import { GetEnumCategorys } from '@/api/sys/enum';
 import { messageBoxConfirm } from '@/utils/message';
 import { useTable, BasicButton, useDialogForm } from 'ttz-ui';
-const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
-    width: '90%',
+const [DialogFormComp, dialogFormMethods] = useDialogForm<any>({
+    width: '95%',
     closeOnClickModal: false,
+    labelPosition: 'top',
     formSchemas: [
         { field: 'name', label: '名称', component: 'Input' },
         { field: 'tableName', label: '表名', component: 'Input' },
@@ -32,28 +34,55 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
                     },
 
                     {
-                        label: '字段类型', prop: 'colType', editConfig: {
+                        label: '字段类型', prop: 'colType', editConfig: ({ setRowFieldValue }) => ({
                             component: 'Select', componentProps: {
                                 options: [
                                     { value: 'String', label: '字符串' },
                                     { value: 'Boolean', label: '布尔' },
                                     { value: 'Int', label: '数字' },
                                     { value: 'DateTime', label: '日期时间' },
+                                    { value: 'Enum', label: '枚举' },
                                     { value: 'SubTable', label: '子表' },
-                                ]
+                                ],
+                                onChange: (val) => {
+                                    if (val !== 'SubTable') {
+                                        setRowFieldValue('fission', null)
+                                        setRowFieldValue('subTableQueryStrategy', null)
+                                        setRowFieldValue('subTableWritableStrategy', null)
+                                        setRowFieldValue('subTableId', null)
+                                        setRowFieldValue('subTableType', null)
+                                    }
+                                    if (val !== 'Enum') {
+                                        setRowFieldValue('enumCategoryId', null)
+                                    }
+
+                                }
                             }
-                        }
+                        }), width: 150
                     },
                     {
                         label: '可写入', prop: 'canWritable', editConfig: {
                             component: 'Switch'
-                        }
+                        }, width: 80
                     },
 
                     {
                         label: '可查询', prop: 'canQuery', editConfig: {
                             component: 'Switch'
-                        }
+                        }, width: 80
+                    },
+                    {
+                        label: '枚举类型', prop: 'enumCategoryId',
+                        hide: ({ row }) => {
+                            return row.colType !== 'Enum'
+                        }, editConfig: {
+                            component: 'ApiSelect', componentProps: {
+                                api: GetEnumCategorys,
+                                immediate: true,
+                                labelField: 'title',
+                                valueField: 'id', placeholder: '请选择枚举类型'
+                            }
+                        }, width: 150
                     },
                     {
                         label: '子表类型', prop: 'subTableType',
@@ -64,7 +93,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
                             component: 'Select', componentProps: {
                                 options: [{ value: 'ToOne', label: '对一' }, { value: 'ToMany', label: '对多' }]
                             }
-                        }
+                        }, width: 120
                     },
                     /**
                      *TODO 弹窗选择子表 
@@ -89,7 +118,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
                                     { value: 'UpsertByObject', label: '更新对象' },
                                 ]
                             }
-                        }
+                        }, width: 120
                     },
                     /**
                     *TODO 部分对象时需要再加一个配置，配置对应查询的节选字段
@@ -104,7 +133,18 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
                                     { value: 'FullObject', label: '完整对象' },
                                 ]
                             }
-                        }
+                        }, width: 150
+                    },
+                    {
+                        label: '分裂', prop: 'fission', hide: ({ row }) => {
+                            return !(row.canQuery && (row.colType === 'SubTable' || row.colType === 'Enum'))
+                        }, editConfig: {
+                            component: 'AceEditor', componentProps: {
+                                lnag: 'json'
+                            }, componentStyle: {
+                                height: '90px'
+                            }
+                        }, width: 300
                     },
                 ]
             }
@@ -112,14 +152,22 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<DynamicTable>({
         },
     ],
     submitApi: async (formData) => {
-        return SaveDynamicTable(formData)
+        console.log(formData.cols)
+        return SaveDynamicTable({
+            ...formData, cols: formData.cols.map((col) => {
+                return {
+                    ...col,
+                    fission: (col.fission) ? JSON.parse(col.fission) : null
+                }
+            })
+        })
     },
     onClosed: () => tableMethods.reload()
 })
 const [TableComp, tableMethods] = useTable<Recordable>({
-    rowKey: 'id', 
+    rowKey: 'id',
     columns: [
-        { prop: 'id', label: 'id' },
+        // { prop: 'id', label: 'id' },
         { prop: 'name', label: '名称' },
         { prop: 'tableName', label: '表名' },
         {
@@ -141,24 +189,36 @@ const [TableComp, tableMethods] = useTable<Recordable>({
     actionColumn: (row) => {
         return <div>
             <BasicButton func={() => edit(row)}>编辑</BasicButton>
-            <BasicButton func={() => del(row)} type='danger'>删除</BasicButton>
+            <BasicButton func={() => del(row)} isConfirm type='danger'>删除</BasicButton>
         </div>
     },
     headerActionRender: () => <BasicButton func={add} type='primary'>新增</BasicButton>,
     title: '数据表管理',
 })
 async function add() {
-    dialogFormMethods.open({ name: '', tableName: '', cols: [] })
+    dialogFormMethods.open({
+        name: '', tableName: '', cols: [
+            { canQuery: true, canWritable: false, name: 'createdAt', colType: 'DateTime' },
+            { canQuery: true, canWritable: false, name: 'updatedAt', colType: 'DateTime' },
+        ]
+    })
 }
 async function edit(row) {
     const tableData = await GetDynamicTable(row.id)
-    console.log(tableData)
-    dialogFormMethods.open(tableData)
+    dialogFormMethods.open({
+
+        ...tableData,
+        cols: tableData.cols.map((col) => {
+            return {
+                ...col,
+                fission: (col.fission) ? JSON.stringify(col.fission, null, 2) : null
+            }
+        })
+    })
 }
 async function del(row) {
-    await messageBoxConfirm(`确定要删除该记录吗？`, { title: '提示' }, async () => {
-        await DelDynamicTable(row.id)
-    })
-    tableMethods.reload()
+    await DelDynamicTable(row.id)
+
+    await tableMethods.reload()
 } 
 </script>

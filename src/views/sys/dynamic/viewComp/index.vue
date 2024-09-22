@@ -11,11 +11,12 @@
 import { DelDynamicFormViewComp, GetDynamicFormViewComp, GetDynamicFormViewComps, SaveDynamicFormViewComp, type DynamicFormViewComp } from '@/api/sys/dynamic/formViewComp';
 import { messageBoxConfirm } from '@/utils/message';
 import { useTable, BasicButton, useDialogForm, useForm, type FormBind } from 'ttz-ui';
-import { pick } from 'lodash';
+import { omit } from 'lodash';
 import { GetDynamicForms } from '@/api/sys/dynamic/form';
 import { GetDynamicTables } from '@/api/sys/dynamic/table';
-
-const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormViewComp, "id", 'tableColumns'> & { tableColumns: any[] }>({
+const dataSourceTypeOptions = [{ value: 'DynamicTable', label: '轻代码数据表' }]
+const formSourceTypeOptions = [{ value: 'DynamicForm', label: '轻代码表单' }]
+const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<DynamicFormViewComp, "id">>({
     labelWidth: '100px',
     width: '90%',
     closeOnClickModal: false,
@@ -24,17 +25,18 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
             field: 'name', label: '名称', component: 'Input'
         },
         {
+
             category: 'Container', component: 'Row', children: [{
                 colProps: { span: 6 },
                 field: 'dataSourceType', label: '数据源类型', component: 'Select', componentProps: {
-                    options: [{ value: 'DynamicTable', label: '轻代码数据表' }]
+                    options: dataSourceTypeOptions
                 }
             }, {
                 colProps: { span: 6 },
                 field: 'dynamicTableId', label: '轻代码数据表', component: 'ApiSelect', componentProps: ({ formMethods }) => ({
                     api: GetDynamicTables, labelField: 'name', valueField: 'id', placeholder: '请选择轻代码数据表', immediate: true,
-                    onChange: (id, dynamicTable) => {
-                        formMethods.setFieldsValue('tableColumns', (dynamicTable.cols || []).map((col) => {
+                    onChange: (val: string | Recordable, option?: Recordable | undefined) => {
+                        formMethods.setFieldsValue('tableColumns', (option?.cols || []).map((col) => {
                             return { prop: col.name, label: col.name, width: '', showOverflowTooltip: false, transform: '' }
                         }))
                     }
@@ -42,7 +44,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
             }, {
                 colProps: { span: 6 },
                 field: 'formSourceType', label: '表单源类型', component: 'Select', componentProps: {
-                    options: [{ value: 'DynamicForm', label: '轻代码表单' }]
+                    options: formSourceTypeOptions
                 }
             },
             {
@@ -86,19 +88,50 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<MakePartialAndRemove<D
             }
         }
     ],
-    submitApi: async (formData) => {
-        return SaveDynamicFormViewComp({
-            ...formData,
-            tableColumns: JSON.stringify(formData.tableColumns)
-        })
-    },
+    submitApi: SaveDynamicFormViewComp,
     onClosed: () => tableMethods.reload()
 })
 const [TableComp, tableMethods] = useTable<Recordable>({
     rowKey: 'id',
     columns: [
-        { prop: 'id', label: 'id' },
+        // { prop: 'id', label: 'id' },
         { prop: 'name', label: '名称' },
+        {
+            prop: 'dataSourceType', label: '数据源', formatter: (row, val) => {
+                if (val === 'DynamicTable') {
+                    return <el-tag>{row.dynamicTable.name}</el-tag>
+                } else {
+                    return `-`
+                }
+            }
+        },
+        // {
+        //     prop: 'dynamicTable', label: '轻代码数据表', formatter: (row, val) => {
+        //         if (row.dataSourceType === 'DynamicTable') {
+        //             return val.name
+        //         } else {
+        //             return `-`
+        //         }
+        //     }
+        // },
+        {
+            prop: 'formSourceType', label: '表单', formatter: (row, val) => {
+                if (val === 'DynamicForm') {
+                    return <el-tag>{row.dynamicForm.name}</el-tag>
+                } else {
+                    return `-`
+                }
+            }
+        },
+        // {
+        //     prop: 'dynamicForm', label: '轻代码表单', formatter: (row, val) => {
+        //         if (row.formSourceType === 'DynamicForm') {
+        //             return val.name
+        //         } else {
+        //             return `-`
+        //         }
+        //     }
+        // }, 
         { prop: 'createdAt', label: '创建时间' },
         { prop: 'updatedAt', label: '编辑时间' },
     ],
@@ -108,7 +141,7 @@ const [TableComp, tableMethods] = useTable<Recordable>({
     actionColumn: (row) => {
         return <div>
             <BasicButton func={() => edit(row)}>编辑</BasicButton>
-            <BasicButton func={() => del(row)} type='danger'>删除</BasicButton>
+            <BasicButton func={() => del(row)} isConfirm type='danger'>删除</BasicButton>
         </div>
     },
     headerActionRender: () => <BasicButton func={add} type='primary'>新增</BasicButton>,
@@ -119,15 +152,11 @@ async function add() {
 }
 async function edit(row) {
     const tableData = await GetDynamicFormViewComp(row.id)
-    dialogFormMethods.open({
-        ...pick(tableData, ['id', 'name', 'dataSourceType', 'formSourceType', 'dynamicTableId', 'dynamicFormId']),
-        tableColumns: JSON.parse(tableData.tableColumns)
-    })
+    dialogFormMethods.open(omit(tableData, 'createdAt', 'updatedAt'))
 }
 async function del(row) {
-    await messageBoxConfirm(`确定要删除该记录吗？`, { title: '提示' }, async () => {
-        await DelDynamicFormViewComp(row.id)
-    })
-    tableMethods.reload()
+    await DelDynamicFormViewComp(row.id)
+
+    await tableMethods.reload()
 } 
 </script>
