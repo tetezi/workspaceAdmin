@@ -42,12 +42,11 @@ const { toggle } = useFullscreen()
 
 const [SettingFormComp] = useForm({
     formSchemas: [
-
         {
-            category: 'Container', component: 'Card', componentProps: { title: '菜单配置' }, children: [
+            category: 'Container', component: 'Collapse', componentProps: { title: '菜单配置' }, children: [
                 { field: ['menu', 'collapse'], label: '是否折叠', component: 'Switch' },
                 {
-                    field: ['menu', 'bgColor'], label: '背景颜色', component: () => (ElColorPicker)
+                    field: ['menu', 'bgColor'], label: '背景颜色', component: 'ColorPicker'
                 },
             ]
         },
@@ -65,7 +64,7 @@ const [SettingFormComp] = useForm({
     ],
 })
 const [DialogComp, dialogMethods] = useDialog({
-    title: '项目配置',
+    title: '本地配置',
     showActionBtns: false,
     width: 300
 })
