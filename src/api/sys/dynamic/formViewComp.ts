@@ -3,14 +3,14 @@ import { baseHttp } from "@/utils/http";
 export type DynamicFormViewComp = {
   id: UUID;
   name: string;
-  tableColumns: string;
+  tableColumns: Recordable[];
   dataSourceType: string;
   dynamicTableId?: UUID;
   formSourceType: string;
   dynamicFormId?: UUID;
-}; //& (T extends true ? { columns: string } : { columns: Recordable[] });
+};
 export async function GetDynamicFormViewComps(params: PaginatedRequest) {
-  return baseHttp.get(
+  return baseHttp.get<DynamicFormViewComp[]>(
     {
       url: "/dynamic/formViewComp/getFormViewComps",
     },
@@ -19,7 +19,7 @@ export async function GetDynamicFormViewComps(params: PaginatedRequest) {
 }
 
 export async function GetDynamicFormViewComp(id: UUID) {
-  return baseHttp.get(
+  return baseHttp.get<DynamicFormViewComp>(
     {
       url: "/dynamic/formViewComp/getFormViewComp",
     },
@@ -27,7 +27,9 @@ export async function GetDynamicFormViewComp(id: UUID) {
   );
 }
 
-export async function SaveDynamicFormViewComp(params: MakePartialAndRemove<DynamicFormViewComp, "id"> ) {
+export async function SaveDynamicFormViewComp(
+  params: MakePartialAndRemove<DynamicFormViewComp, "id">
+) {
   return baseHttp.post(
     {
       url: "/dynamic/formViewComp/saveFormViewComp",
