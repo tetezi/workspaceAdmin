@@ -1,0 +1,19 @@
+// @forward "element-plus/theme-chalk/src/common/var.scss" with (
+//   // $color-primary:(red)
+//   $colors:
+//     (
+//       primary: (
+//         base: red
+//       )
+//     ),
+//   $text: (
+//     color: (
+//       red
+//     )
+//   )
+// );
+@forward "element-plus/theme-chalk/src/mixins/config.scss" with (
+  $namespace: "el"
+);
+// @use "element-plus/theme-chalk/el-message.css";
+// @use "element-plus/theme-chalk/el-message-box.css";

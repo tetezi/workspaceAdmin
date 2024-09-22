@@ -25,5 +25,15 @@ body {
 }
 
 .el-button + .el-button {
-  margin-left: 0;
+  margin-left: 0 !important;
+}
+
+.ttz-button + .ttz-button {
+  margin-left: 0 !important;
+} 
+.el-tabs--border-card > .el-tabs__content {
+  padding: 0px !important
+}
+.el-message-box__message {
+  width: 100%;
 }
