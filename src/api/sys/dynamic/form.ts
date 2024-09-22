@@ -1,12 +1,8 @@
+import type {
+  DynamicFormType,
+} from "@/components/DynamicFormDialog/types";
 import { baseHttp } from "@/utils/http";
 
-export type DynamicFormType = {
-  id: UUID;
-  name: string;
-  beforeSubmit?: string;
-  schemas: string;
-  description?: string;
-};
 export async function GetDynamicForms(params: PaginatedRequest) {
   return baseHttp.get(
     {
