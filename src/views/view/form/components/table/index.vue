@@ -44,7 +44,15 @@ const [TableComp, tableMethods] = useTable(() => ({
                         /**
                          * 需要处理转换函数
                          */
-                        return row[column.prop]
+                        try {
+                            const transform = new Function(column.transform)()
+                            return transform(row[column.prop], row)
+                        } catch (error) {
+                            console.error(`JSCode运行异常:${(error as ReferenceError).message}`, {
+                                rawError: error, code: column.transform, configKey: `${column}.transform`
+                            })
+                            return row[column.prop]
+                        }
                     } : undefined
                 }
             })
