@@ -27,6 +27,7 @@ export type DynamicTable = {
     subTableId?: UUID;
     subTableWritableStrategy?: "UpsertByObject" | "ConnectById";
     subTableQueryStrategy?: "PartialObject" | "FullObject";
+    fission?:{ toKey: string; fromKey: string }[];
   }[];
 };
 export async function SaveDynamicTable(params: DynamicTable) {
