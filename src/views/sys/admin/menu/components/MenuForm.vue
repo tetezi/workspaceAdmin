@@ -9,6 +9,7 @@ import { pick } from 'lodash';
 import { ref } from 'vue';
 import { watch } from 'vue';
 import { GetMenu, SaveMenu } from '@/api/sys/menus';
+import { GetDynamicFormViewComps } from '@/api/sys/dynamic/formViewComp';
 const props = defineProps<{
     id?: UUID,
     parentId?: UUID
@@ -27,8 +28,19 @@ const [FormComponent, formMethods] = useForm({
                 options: [
                     { value: 'Iframe', label: 'Iframe(开发中)' },
                     { value: 'View', label: '视图页面' },
+                    { value: 'DynamicFormView', label: '轻代码视图页面' },
                     { value: 'Group', label: '分组文件夹' },
                 ]
+            }
+        },
+        {
+            field: 'dynamicFormViewId', label: '视图组件', component: 'ApiSelect', componentProps: {
+                api: GetDynamicFormViewComps,
+                labelField: 'name',
+                valueField: 'id',
+                immediate: true,
+            }, ifShow: ({ formValue }) => {
+                return formValue.type === 'DynamicFormView'
             }
         },
         {
@@ -38,7 +50,7 @@ const [FormComponent, formMethods] = useForm({
         },
         {
             field: 'url', label: '文件路径', component: 'Input', ifShow: ({ formValue }) => {
-                return formValue.type !== 'Group'
+                return formValue.type === 'View' || formValue.type === 'Iframe'
             }
         },
         { field: 'sort', label: '排序', component: 'InputNumber' },
@@ -49,11 +61,11 @@ const [FormComponent, formMethods] = useForm({
         { field: 'description', label: '备注', component: 'Input' },
 
     ],
-    beforeSubmit: (raw) => {
-        return {
-            ...pick(raw, ['name', 'url', 'sort', 'routerPath', 'type', /*'param', */ 'description', 'isEnabled']),
-        }
-    },
+    // beforeSubmit: (raw) => {
+    //     return {
+    //         ...pick(raw, ['name', 'url', 'sort', 'routerPath', 'type', /*'param', */ 'description', 'isEnabled']),
+    //     }
+    // },
     submitApi: async (params) => {
         await SaveMenu({ id: props.id, parentMenuId: props.parentId, ...params })
     },
@@ -65,7 +77,7 @@ const [FormComponent, formMethods] = useForm({
         loadingRef.value = true
         if (props.id) {
             await GetMenu(props.id).then((res) => {
-                formMethods.setModelValue(pick(res, ['name', 'url', 'sort', 'routerPath', 'type', /*'param', */'description', 'isEnabled']))
+                formMethods.setModelValue(res)
             })
         }
         loadingRef.value = false

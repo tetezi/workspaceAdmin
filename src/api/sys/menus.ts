@@ -19,6 +19,7 @@ enum MenuType {
   Iframe = "Iframe",
   View = "View",
   Group = "Group",
+  DynamicFormView = "DynamicFormView",
 }
 export async function SaveMenu(params: {
   id?: UUID;

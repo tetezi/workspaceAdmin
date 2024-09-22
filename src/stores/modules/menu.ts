@@ -9,8 +9,9 @@ export type Menu = {
   name: string;
   routerPath: Nullable<string>;
   // label: Nullable<string>;
-  type: "Iframe" | "View" | "Group";
+  type: "Iframe" | "View" | "Group" | "DynamicFormView";
   url: Nullable<string>;
+  dynamicFormViewId?: UUID;
   // Param: Nullable<string>;
 
   sort: number;
@@ -74,11 +75,16 @@ export const useMenuStore = defineStore({
           },
           children,
         };
-        if (menu.routerPath && menu.url) {
+        if (menu.routerPath) {
           result.path = menu.routerPath;
           let component: any = undefined;
           if (menu.type === "View") {
-            component = dynamicImport(menu.url);
+            if (menu.url) {
+              component = dynamicImport(menu.url);
+            }
+          } else if (menu.type === "DynamicFormView") {
+            component = dynamicImport(`/view/form`);
+            result.props = { dynamicFormViewCompId: menu.dynamicFormViewId };
           }
           if (children.length > 0) {
             children.unshift({
