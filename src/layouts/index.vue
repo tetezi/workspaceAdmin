@@ -27,6 +27,10 @@
             <el-main :style="{ padding: '0', backgroundColor: '#F0F2F5' }">
                 <Content></Content>
             </el-main>
+            <el-footer height="50px">
+                <Foot></Foot>
+                
+            </el-footer>
         </el-container>
     </el-container>
 </template>
@@ -35,6 +39,7 @@ import Menu from './src/Menu.vue'
 import Tabs from './src/Tabs.vue'
 import Content from './src/Content.vue'
 import Header from './src/Header.vue'
+import Foot from './src/Foot.vue'
 import logo from '@/assets/images/logo.jpg'
 import { router } from '@/router'
 import { PAGE } from '@/router/constant'
