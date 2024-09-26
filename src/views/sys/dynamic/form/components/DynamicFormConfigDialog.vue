@@ -92,9 +92,21 @@ const [DialogComp, dialogFormMethods] = useDialog<MakePartialAndRemove<DynamicFo
  * 主要配置表单hook
  */
 const [FormComp, formMethods] = useForm({
+    // defaultValue: {
+    //     labelPosition: 'top'
+    // },
     labelPosition: 'top',
     formSchemas: [
-        { field: 'name', label: '名称', component: 'Input' },
+        { field: 'name', label: '名称', component: 'Input', colProps: { span: 12 } },
+        {
+            field: 'labelPosition', label: '标签位置', component: 'Select', componentProps: {
+                options: [
+                    { label: '左', value: 'left' },
+                    { label: '右', value: 'right' },
+                    { label: '上', value: 'top' },
+                ]
+            }, colProps: { span: 12 } 
+        },
         {
             field: 'defaultValue', label: '表单默认值 ', component: () => CodeValueInput, componentProps: {
                 expectedValueType: 'Recordable',

@@ -1,14 +1,15 @@
 import { baseHttp } from "@/utils/http";
 
 export async function GetDynamicTableRecoreds(
-  tableId: UUID,
-  params: PaginatedRequest
+  // tableId: UUID,
+  { tableId, tableName }: { tableId?: UUID; tableName?: string },
+  params?: PaginatedRequest
 ) {
   return baseHttp.get(
     {
       url: "/dynamic/tableRecored/getTableRecoreds",
     },
-    { tableId, ...params }
+    { tableId, tableName, ...params }
   );
 }
 
