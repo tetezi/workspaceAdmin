@@ -78,6 +78,7 @@ export type DynamicFormSchemaType = {
 export type DynamicFormType = {
   id: UUID;
   name: string;
+  labelPosition?: "left" | "right" | "top";
   beforeSubmit?: string;
   defaultValue?: string;
   schemas: DynamicFormSchemaType[];

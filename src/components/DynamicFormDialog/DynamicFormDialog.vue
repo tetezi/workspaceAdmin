@@ -112,7 +112,8 @@ const actialConfigRef = computed(() => {
     return {
         beforeSubmit: evalMainConfig('beforeSubmit', (p) => (p)),
         defaultValue: evalMainConfig('defaultValue', {}),
-        formSchemas: unref(formSchemasRef).map(evalSchemaConfig)
+        formSchemas: unref(formSchemasRef).map(evalSchemaConfig),
+        labelPosition: unref(dynamicFormRef)?.labelPosition
     }
 })
 const [DialogFormComp, dialogFormMethods, isOK] = useDialogForm<Recordable>(() => ({
@@ -121,6 +122,7 @@ const [DialogFormComp, dialogFormMethods, isOK] = useDialogForm<Recordable>(() =
     closeOnClickModal: false,
     formSchemas: unref(actialConfigRef).formSchemas,
     submitApi: props.submitFunc,
+    labelPosition: unref(actialConfigRef).labelPosition,
     beforeSubmit: async (data) => {
         const { beforeSubmit } = unref(actialConfigRef)
         return await isFunction(beforeSubmit) ? beforeSubmit(data) : data
