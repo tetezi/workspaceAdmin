@@ -17,8 +17,8 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<any>({
     closeOnClickModal: false,
     labelPosition: 'top',
     formSchemas: [
-        { field: 'name', label: '名称', component: 'Input' },
-        { field: 'tableName', label: '表名', component: 'Input' },
+        { field: 'name', label: '名称', component: 'Input', colProps: { span: 6 } },
+        { field: 'tableName', label: '表名', component: 'Input' , colProps: { span: 6 }},
 
         {
             field: 'cols', label: '字段', component: 'EditableTable', componentStyle: {
