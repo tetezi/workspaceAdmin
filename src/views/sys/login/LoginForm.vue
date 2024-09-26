@@ -20,6 +20,10 @@ const router = useRouter()
 const userStore = useUserStore()
 const [FormComponent, formMethods] = useForm({
     labelWidth: 0,
+    defaultValue:{
+        userNo: 'admin',
+        password: '123456'
+    },
     formSchemas: [
         {
             field: 'userNo', label: '账号', component: 'Input',
