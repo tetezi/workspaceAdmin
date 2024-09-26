@@ -10,7 +10,7 @@
                 :dynamicTableId="dynamicFormViewCompRef.dynamicTableId" :add="addFunc" :edit="editFunc" :del="delFunc">
             </TableComp>
         </template>
-        <template v-else>
+        <template v-else-if='loadingRef === false'>
             <el-result title="页面组件不存在" sub-title="请联系管理员" icon="error">
             </el-result>
         </template>
@@ -20,7 +20,7 @@
 import { GetDynamicFormViewComp } from '@/api/sys/dynamic/formViewComp';
 import { ref, unref, watchEffect } from 'vue';
 import TableComp from './components/table/index.vue';
-import FormComp from './components/form/index.vue'; 
+import FormComp from './components/form/index.vue';
 const props = defineProps<{
     dynamicFormViewCompId?: UUID
 }>()

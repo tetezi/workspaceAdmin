@@ -23,7 +23,9 @@ const [TableComp, tableMethods] = useTable(() => ({
     title: props.title,
     api: async (params, pageParams) => {
         if (props.dataSourceType === 'DynamicTable') {
-            return await GetDynamicTableRecoreds(props.dynamicTableId!, pageParams)
+            return await GetDynamicTableRecoreds({
+                tableId: props.dynamicTableId!
+            }, pageParams)
         } else {
             /**
              * TODO:需要处理其他数据源格式
@@ -67,7 +69,7 @@ const [TableComp, tableMethods] = useTable(() => ({
     actionColumn: (row) => {
         return <div>
             <BasicButton func={() => props.edit(row)}>编辑</BasicButton>
-            <BasicButton func={() => props.del(row)} type='danger'>删除</BasicButton>
+            <BasicButton func={() => props.del(row)} isConfirm type='danger'>删除</BasicButton>
         </div>
     },
     headerActionRender: () => <BasicButton func={() => props.add()} type='primary'>新增</BasicButton>,

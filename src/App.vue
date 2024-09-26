@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :locale="zhCn">
+  <el-config-provider :locale="zhCn" :zIndex="3000">
     <router-view></router-view>
   </el-config-provider>
 </template>
