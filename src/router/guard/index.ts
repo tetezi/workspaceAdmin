@@ -17,8 +17,15 @@ function createMenuGuard(router: Router) {
     }
     if (token) {
       if (!menuStore.isCompleted) {
-        await menuStore.initPermissionMenu();
-        next({ path: to.fullPath, replace: true, query: to.query });
+        try {
+          await menuStore.initPermissionMenu();
+          next({ path: to.fullPath, replace: true, query: to.query });
+        } catch (e) {
+          next({
+            path: PAGE.login,
+            replace: true,
+          });
+        }
         return;
       } else {
         next();
