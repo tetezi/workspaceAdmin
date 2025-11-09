@@ -8,9 +8,8 @@
 
 </template>
 <script lang="tsx" setup>
-import { GetDynamicTables, GetDynamicTable, SaveDynamicTable, DelDynamicTable, type DynamicTable } from '@/api/sys/dynamic/table';
+import { GetDynamicTables, GetDynamicTable, SaveDynamicTable, DelDynamicTable } from '@/api/sys/dynamic/table';
 import { GetEnumCategorys } from '@/api/sys/enum';
-import { messageBoxConfirm } from '@/utils/message';
 import { useTable, BasicButton, useDialogForm } from 'ttz-ui';
 const [DialogFormComp, dialogFormMethods] = useDialogForm<any>({
     width: '95%',

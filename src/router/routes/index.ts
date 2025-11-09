@@ -1,3 +1,11 @@
+/*
+ * @Author: tetezi MaHouShouJoTetezi@foxmail.com
+ * @Date: 2024-06-15 14:51:33
+ * @LastEditors: tetezi MaHouShouJoTetezi@foxmail.com
+ * @LastEditTime: 2025-11-09 18:48:16
+ * @FilePath: \workspaceAdmin\src\router\routes\index.ts
+ * @Description: 
+ */
 import { LAYOUT, PAGE } from "../constant";
 import type { RouteRecord } from "../types";
 import { isArray } from "lodash";
@@ -69,8 +77,7 @@ export const RedirectRoute: RouteRecord = {
  * 404
  */
 export const PageNotFoundRoute: RouteRecord = {
-  path: "/:path(.*)*",
-  name: "404",
+  path: "/:path(.*)*", 
   component: LAYOUT,
   meta: {
     title: "ErrorPage",
