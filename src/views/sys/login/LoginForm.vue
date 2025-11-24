@@ -1,3 +1,11 @@
+<!--
+ * @Author: tetezi MaHouShouJoTetezi@foxmail.com
+ * @Date: 2024-09-22 16:25:59
+ * @LastEditors: tetezi MaHouShouJoTetezi@foxmail.com
+ * @LastEditTime: 2025-11-21 00:29:35
+ * @FilePath: \workspaceAdmin\src\views\sys\login\LoginForm.vue
+ * @Description: 
+-->
 <template>
     <div style="width: 400px;padding:36px 24px ;border-radius: 5px;background-color: #FFFFFF;">
         <el-image :src="logo2" style="height: 80%;width:80%;margin:0px auto 8px;display: block;"></el-image>
@@ -21,7 +29,7 @@ const userStore = useUserStore()
 const [FormComponent, formMethods] = useForm({
     labelWidth: 0,
     defaultValue:{
-        userNo: 'admin',
+        userNo: 'test',
         password: '123456'
     },
     formSchemas: [
