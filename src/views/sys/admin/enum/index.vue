@@ -1,3 +1,11 @@
+<!--
+ * @Author: tetezi MaHouShouJoTetezi@foxmail.com
+ * @Date: 2024-09-18 15:15:46
+ * @LastEditors: tetezi MaHouShouJoTetezi@foxmail.com
+ * @LastEditTime: 2025-11-20 19:36:25
+ * @FilePath: \workspaceAdmin\src\views\sys\admin\enum\index.vue
+ * @Description: 
+-->
 <template>
     <div style="height: 100%;box-sizing: border-box;padding:8px  ">
         <EnumTableComp style="padding:8 16px">
@@ -36,7 +44,7 @@ const [EnumTableComp, enumTableMethods] = useTable({
         </div>
     },
     headerActionRender: <BasicButton func={add} type='primary' > 新增 </BasicButton>,
-    title: `角色管理表`,
+    title: `枚举管理表`,
 })
 const [SaveEnumDialogComp, saveEnumDialogMethods] = useDialogForm<SaveEnumCategoryParamsType>({
     labelPosition: 'top',
