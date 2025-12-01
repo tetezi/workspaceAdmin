@@ -19,13 +19,6 @@ declare type DeepKeyof<T> = T extends object
     }[keyof T]
   : never;
 
-/**压缩类型推断范围 */
-declare type Narrow<T> = T extends []
-  ? []
-  : {
-      [K in keyof T]: T[K] extends Primitive ? T[K] : Narrow<T[K]>;
-    };
-
 /** 动态对象类型限制 */
 declare type MutableRecord<
   /**判断key */
