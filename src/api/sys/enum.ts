@@ -21,6 +21,7 @@ export type SaveEnumCategoryParamsType = {
     id?: UUID;
     name: string;
     value: string;
+    tagColor?: string;
     description?: string;
   }[];
 };
@@ -29,7 +30,7 @@ export async function GetEnumCategorys(params: PaginatedRequest) {
     {
       url: "/enum/getEnumCategorys",
     },
-    params
+    params,
   );
 }
 
@@ -38,17 +39,17 @@ export async function GetEnumCategory(categoryName: string) {
     {
       url: "/enum/getEnumCategory",
     },
-    { categoryName }
+    { categoryName },
   );
 }
 export async function SaveEnumCategory(
-  saveEnumCategoryParams: SaveEnumCategoryParamsType
+  saveEnumCategoryParams: SaveEnumCategoryParamsType,
 ) {
   return baseHttp.post(
     {
       url: "/enum/saveEnumCategory",
     },
-    saveEnumCategoryParams
+    saveEnumCategoryParams,
   );
 }
 
@@ -57,6 +58,6 @@ export async function DelEnumCategory(id: UUID) {
     {
       url: "/enum/delEnumCategory",
     },
-    { id }
+    { id },
   );
 }
