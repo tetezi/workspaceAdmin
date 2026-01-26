@@ -38,7 +38,7 @@ const [TableComp, tableMethods] = useTable(() => ({
         {
           tableId: props.dynamicTableId!,
         },
-        pageParams
+        pageParams,
       );
     } else {
       /**
@@ -64,11 +64,14 @@ const [TableComp, tableMethods] = useTable(() => ({
                   const transform = new Function(column.transform)();
                   return transform(row[column.prop], row);
                 } catch (error) {
-                  console.error(`JSCode运行异常:${(error as ReferenceError).message}`, {
-                    rawError: error,
-                    code: column.transform,
-                    configKey: `${column}.transform`,
-                  });
+                  console.error(
+                    `JSCode运行异常:${(error as ReferenceError).message}`,
+                    {
+                      rawError: error,
+                      code: column.transform,
+                      configKey: `${column}.transform`,
+                    },
+                  );
                   return row[column.prop];
                 }
               }
@@ -86,19 +89,14 @@ const [TableComp, tableMethods] = useTable(() => ({
     return (
       <div>
         <BasicButton func={() => props.edit(row)}>编辑</BasicButton>
-        <BasicButton
-          func={() => props.del(row)}
-          isConfirm
-          type="danger">
+        <BasicButton func={() => props.del(row)} isConfirm type="danger">
           删除
         </BasicButton>
       </div>
     );
   },
   headerActionRender: () => (
-    <BasicButton
-      func={() => props.add()}
-      type="primary">
+    <BasicButton func={() => props.add()} type="primary">
       新增
     </BasicButton>
   ),
