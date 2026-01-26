@@ -29,7 +29,7 @@ const userStore = useUserStore()
 const [FormComponent, formMethods] = useForm({
     labelWidth: 0,
     defaultValue:{
-        userNo: 'test',
+        userNo: 'admin',
         password: '123456'
     },
     formSchemas: [
