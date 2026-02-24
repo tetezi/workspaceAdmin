@@ -32,10 +32,10 @@ const [TableComp, tableMethods] = useTable<Recordable>({
         </div>
     },
     headerActionRender: () => <BasicButton func={add} type='primary'>新增</BasicButton>,
-    title: '表单管理v2',
+    title: '表单管理',
 })
 async function add() {
-    unref(DynamicFormConfigDialogRef)?.open({ name: '', schemas: [] })
+    unref(DynamicFormConfigDialogRef)?.open()
 }
 async function edit(row) {
     const tableData = await GetDynamicForm(row.id)

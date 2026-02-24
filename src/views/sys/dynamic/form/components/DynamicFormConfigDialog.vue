@@ -12,7 +12,6 @@
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="主要配置" name="main">
           <FormComp
-            :defaultValue="omit(data, 'schemas')"
             style="height: 500px; padding: 1px; box-sizing: border-box"
           ></FormComp>
         </el-tab-pane>
@@ -32,7 +31,7 @@
 import { SaveDynamicForm } from "@/api/sys/dynamic/form";
 import { AceEditor, BasicButton, useDialog, useForm } from "ttz-ui";
 import SchemasEditorComp from "./SchemasEditor.vue";
-import { ref, unref } from "vue";
+import { computed, ref, unref } from "vue";
 import { omit } from "lodash";
 import Preview from "./Preview.vue";
 import { messageBox } from "@/utils/message";
@@ -196,16 +195,16 @@ const [DialogComp, dialogFormMethods] = useDialog<
  * 主要配置表单hook
  */
 const [FormComp, formMethods] = useForm({
-  defaultValue: {
-    labelPosition: "left",
-  },
+  defaultValue: computed(() => {
+    return unref(dialogFormMethods.getData);
+  }),
   labelPosition: "top",
   formSchemas: [
     {
       field: "name",
       label: "名称",
       component: "Input",
-      colProps: { span: 12 }
+      colProps: { span: 12 },
     },
     {
       field: "labelPosition",
@@ -276,7 +275,6 @@ async function previewFrom() {
 }
 async function showFormConfig() {
   const config = await getFormConfig();
-  console.log(JSON.stringify(config), JSON.parse(JSON.stringify(config)));
   messageBox(
     () => (
       <AceEditor
@@ -289,7 +287,7 @@ async function showFormConfig() {
     ),
     {
       width: "80%",
-    }
+    },
   );
   console.log();
 }
@@ -305,10 +303,17 @@ async function submitFunction() {
   });
 }
 defineExpose({
-  open: async (data: MakePartialAndRemove<DynamicFormType, "id">) => {
-    schemasRef.value = data.schemas;
-    formConfigIdRef.value = data.id;
-    dialogFormMethods.open(omit(data, "id"));
+  open: async (data?: MakePartialAndRemove<DynamicFormType, "id">) => {
+    if (data) {
+      schemasRef.value = data.schemas;
+      formConfigIdRef.value = data.id;
+      dialogFormMethods.open(omit(data, ["id", "schemas"]));
+    } else {
+      schemasRef.value = [];
+      formConfigIdRef.value = undefined;
+      dialogFormMethods.open({ labelPosition: "left" });
+    }
+
     // await nextTick()
     // formMethods.setModelValue(omit(data, 'schemas'))
   },
