@@ -49,6 +49,7 @@
         :dataSourceType="dynamicFormViewCompRef.dataSourceType"
         :columns="dynamicFormViewCompRef.tableColumns"
         :dynamicTableId="dynamicFormViewCompRef.dynamicTableId"
+        :dynamicThirdPartyTable="dynamicFormViewCompRef.dynamicThirdPartyTable"
         :add="addFunc"
         :edit="editFunc"
         :del="delFunc"
@@ -77,7 +78,7 @@ watchEffect(async () => {
   if (props.dynamicFormViewCompId) {
     loadingRef.value = true;
     dynamicFormViewCompRef.value = await GetDynamicFormViewComp(
-      props.dynamicFormViewCompId
+      props.dynamicFormViewCompId,
     ).finally(() => {
       loadingRef.value = false;
     });

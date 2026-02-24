@@ -16,10 +16,12 @@ import { useTable, BasicButton, useDialogForm } from "ttz-ui";
 import { omit } from "lodash";
 import { GetDynamicForms } from "@/api/sys/dynamic/form";
 import { GetDynamicTables } from "@/api/sys/dynamic/table";
+import { GetDynamicThirdPartyTables } from "@/api/sys/dynamic/thirdPartyTable";
 const dataSourceTypeOptions = [
-  { value: "DynamicTable", label: "轻代码数据表" },
+  { value: "DynamicTable", label: "内部数据源" },
+  { value: "DynamicThirdPartyTable", label: "外部数据源" },
 ];
-const formSourceTypeOptions = [{ value: "DynamicForm", label: "轻代码表单" }];
+const formSourceTypeOptions = [{ value: "DynamicForm", label: "内部表单" }];
 const [DialogFormComp, dialogFormMethods] = useDialogForm<
   MakePartialAndRemove<DynamicFormViewComp, "id">
 >({
@@ -48,17 +50,17 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<
         {
           colProps: { span: 6 },
           field: "dynamicTableId",
-          label: "轻代码数据表",
+          label: "内部数据源",
           component: "ApiSelect",
           componentProps: ({ formMethods }) => ({
             api: GetDynamicTables,
             labelField: "name",
             valueField: "id",
-            placeholder: "请选择轻代码数据表",
+            placeholder: "请选择内部数据源",
             immediate: true,
             onChange: (
               val: string | Recordable,
-              option?: Recordable | undefined
+              option?: Recordable | undefined,
             ) => {
               formMethods.setFieldsValue(
                 "tableColumns",
@@ -74,12 +76,28 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<
                     showOverflowTooltip: false,
                     transform: "",
                   };
-                })
+                }),
               );
             },
           }),
           ifShow: ({ formValue }) =>
             formValue.dataSourceType === "DynamicTable",
+          labelShow: false,
+        },
+        {
+          colProps: { span: 6 },
+          field: "dynamicThirdPartyTableId",
+          label: "外部数据源",
+          component: "ApiSelect",
+          componentProps: {
+            api: GetDynamicThirdPartyTables,
+            labelField: "name",
+            valueField: "id",
+            placeholder: "请选择外部数据源",
+            immediate: true,
+          },
+          ifShow: ({ formValue }) =>
+            formValue.dataSourceType === "DynamicThirdPartyTable",
           labelShow: false,
         },
         {
@@ -184,6 +202,8 @@ const [TableComp, tableMethods] = useTable<Recordable>({
       formatter: (row, val) => {
         if (val === "DynamicTable") {
           return <el-tag>{row.dynamicTable.name}</el-tag>;
+        } else if (val === "DynamicThirdPartyTable") {
+          return <el-tag type="danger">{row.dynamicThirdPartyTable.name}</el-tag>;
         } else {
           return `-`;
         }
@@ -251,6 +271,7 @@ async function add() {
 }
 async function edit(row) {
   const tableData = await GetDynamicFormViewComp(row.id);
+  console.log(tableData)
   dialogFormMethods.open(omit(tableData, "createdAt", "updatedAt"));
 }
 async function del(row) {

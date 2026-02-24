@@ -292,7 +292,7 @@ const [TableComp, tableMethods] = useTable<Recordable>({
       新增
     </BasicButton>
   ),
-  title: "数据表管理",
+  title: "内部数据源管理",
 });
 async function add() {
   dialogFormMethods.open({

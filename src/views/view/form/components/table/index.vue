@@ -17,7 +17,10 @@ import {
   GetDynamicTableRecoreds,
   SaveDynamicTableRecored,
 } from "@/api/sys/dynamic/tableRecored";
+import { unKnownHttp } from "@/utils/http";
+import { message } from "@/utils/message";
 import { BasicButton, useTable } from "ttz-ui";
+import { h } from "vue";
 const props = defineProps<{
   title: string;
   /**
@@ -25,11 +28,50 @@ const props = defineProps<{
    */
   dataSourceType: "DynamicTable";
   dynamicTableId?: UUID;
+  dynamicThirdPartyTable: {
+    addUrl: string;
+    delUrl: string;
+    editUrl: string;
+    getDetailUrl: string;
+    getListUrl: string;
+  };
   columns: Recordable[];
   add: () => void;
   edit: (row: Recordable) => void;
   del: (row: Recordable) => void;
 }>();
+async function unKnownFetch(url, params, type: "get" | "post" = "get") {
+  if (!url) {
+    message("未配置第三方数据源url", "error");
+    return Promise.reject("未配置第三方数据源url");
+  }
+  // const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYzRiYzU5NS1mNzUyLTRlNzQtOWIxZS1jYTI5MzJiYzFiOWMiLCJpYXQiOjE3NzE5MzA1OTksImV4cCI6MTc3MTkzMTQ5OX0.Vp4Y8jqT-Ozfqtk8Y4nWvAHt-9gpJ3e6u23qUPl0kt8`;
+  const { data } = await unKnownHttp[type](
+    {
+      url: url,
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+    },
+    params,
+    {
+      withToken: false,
+      errorHandler: (err) => {
+        message(
+          {
+            title: "接口请求失败",
+            url,
+            message: err.response.data.message,
+            err,
+          },
+          "error",
+        );
+        return err;
+      },
+    },
+  );
+  return data;
+}
 const [TableComp, tableMethods] = useTable(() => ({
   title: props.title,
   api: async (params, pageParams) => {
@@ -40,6 +82,8 @@ const [TableComp, tableMethods] = useTable(() => ({
         },
         pageParams,
       );
+    } else if (props.dataSourceType === "DynamicThirdPartyTable") {
+      return unKnownFetch(props.dynamicThirdPartyTable.getListUrl, params);
     } else {
       /**
        * TODO:需要处理其他数据源格式
@@ -47,43 +91,37 @@ const [TableComp, tableMethods] = useTable(() => ({
     }
   },
   columns: () => {
-    if (props.dataSourceType === "DynamicTable") {
-      return (props.columns || []).map((column) => {
-        return {
-          prop: column.prop,
-          label: column.label,
-          showOverflowTooltip: column.showOverflowTooltip,
-          width: column.width,
-          formatter: column.transform
-            ? (row) => {
-                // column.transform
-                /**
-                 * 需要处理转换函数
-                 */
-                try {
-                  const transform = new Function(column.transform)();
-                  return transform(row[column.prop], row);
-                } catch (error) {
-                  console.error(
-                    `JSCode运行异常:${(error as ReferenceError).message}`,
-                    {
-                      rawError: error,
-                      code: column.transform,
-                      configKey: `${column}.transform`,
-                    },
-                  );
-                  return row[column.prop];
-                }
+    return (props.columns || []).map((column) => {
+      console.log(111, column, column.transform);
+      return {
+        prop: column.prop,
+        label: column.label,
+        showOverflowTooltip: column.showOverflowTooltip,
+        width: column.width,
+        formatter: column.transform
+          ? (row) => {
+              // column.transform
+              /**
+               * 需要处理转换函数
+               */
+              try {
+                const transform = new Function(column.transform)();
+                return transform(row[column.prop], row, h);
+              } catch (error) {
+                console.error(
+                  `JSCode运行异常:${(error as ReferenceError).message}`,
+                  {
+                    rawError: error,
+                    code: column.transform,
+                    configKey: `${column}.transform`,
+                  },
+                );
+                return row[column.prop];
               }
-            : undefined,
-        };
-      });
-    } else {
-      /**
-       * TODO:需要处理其他数据源格式
-       */
-      return [];
-    }
+            }
+          : undefined,
+      };
+    });
   },
   actionColumn: (row) => {
     return (
@@ -105,28 +143,33 @@ defineExpose({
   saveRecored: async (data) => {
     if (props.dataSourceType === "DynamicTable") {
       return await SaveDynamicTableRecored(props.dynamicTableId!, data);
-    } else {
+    } else if (props.dataSourceType === "DynamicThirdPartyTable") {
       /**
        * TODO:需要处理其他数据源格式
        */
+      return await unKnownFetch(
+        props.dynamicThirdPartyTable.editUrl,
+        data,
+        "post",
+      );
     }
   },
   getRecored: async (id) => {
     if (props.dataSourceType === "DynamicTable") {
       return await GetDynamicTableRecored(props.dynamicTableId!, id);
-    } else {
-      /**
-       * TODO:需要处理其他数据源格式
-       */
+    } else if (props.dataSourceType === "DynamicThirdPartyTable") {
+      return await unKnownFetch(props.dynamicThirdPartyTable.editUrl, { id });
     }
   },
   delRecored: async (id) => {
     if (props.dataSourceType === "DynamicTable") {
       return await DelDynamicTableRecored(props.dynamicTableId!, id);
-    } else {
-      /**
-       * TODO:需要处理其他数据源格式
-       */
+    } else if (props.dataSourceType === "DynamicThirdPartyTable") {
+      return await unKnownFetch(
+        props.dynamicThirdPartyTable.editUrl,
+        { id },
+        "post",
+      );
     }
   },
   reload: async () => {
