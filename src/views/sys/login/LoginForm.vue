@@ -30,7 +30,7 @@ const [FormComponent, formMethods] = useForm({
     labelWidth: 0,
     defaultValue:{
         userNo: 'admin',
-        password: '123456'
+        password: 'password'
     },
     formSchemas: [
         {
