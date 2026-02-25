@@ -60,7 +60,7 @@ const preinstall = [
         name: "多行文本输入框",
         component: "Input",
         category: "Input",
-        componentProps: `return {\n\ttype: 'textarea'\n\tautosize:{ minRows: 3, maxRows: 6 }\n}`,
+        componentProps: `return {\n\ttype: 'textarea',\n\tautosize:{ minRows: 3, maxRows: 6 }\n}`,
       },
       {
         name: "数字输入框",
