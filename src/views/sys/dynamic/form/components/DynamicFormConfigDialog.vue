@@ -184,7 +184,7 @@ const formConfigIdRef = ref();
  * 整体弹窗hook
  */
 const [DialogComp, dialogFormMethods] = useDialog<
-  MakePartialAndRemove<DynamicFormType, "id">
+  MakePartialAndRemove<DynamicFormType, "id" | "schemas">
 >({
   width: "90%",
   title: "轻代码表单配置",
@@ -311,7 +311,7 @@ defineExpose({
     } else {
       schemasRef.value = [];
       formConfigIdRef.value = undefined;
-      dialogFormMethods.open({ labelPosition: "left" });
+      dialogFormMethods.open({ labelPosition: "left", name: "" });
     }
 
     // await nextTick()
