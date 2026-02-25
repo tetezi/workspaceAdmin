@@ -92,7 +92,6 @@ const [TableComp, tableMethods] = useTable(() => ({
   },
   columns: () => {
     return (props.columns || []).map((column) => {
-      console.log(111, column, column.transform);
       return {
         prop: column.prop,
         label: column.label,
@@ -100,10 +99,6 @@ const [TableComp, tableMethods] = useTable(() => ({
         width: column.width,
         formatter: column.transform
           ? (row) => {
-              // column.transform
-              /**
-               * 需要处理转换函数
-               */
               try {
                 const transform = new Function(column.transform)();
                 return transform(row[column.prop], row, h);
@@ -144,21 +139,28 @@ defineExpose({
     if (props.dataSourceType === "DynamicTable") {
       return await SaveDynamicTableRecored(props.dynamicTableId!, data);
     } else if (props.dataSourceType === "DynamicThirdPartyTable") {
-      /**
-       * TODO:需要处理其他数据源格式
-       */
-      return await unKnownFetch(
-        props.dynamicThirdPartyTable.editUrl,
-        data,
-        "post",
-      );
+      if (data.id) {
+        return await unKnownFetch(
+          props.dynamicThirdPartyTable.editUrl,
+          data,
+          "post",
+        );
+      } else {
+        return await unKnownFetch(
+          props.dynamicThirdPartyTable.addUrl,
+          data,
+          "post",
+        );
+      }
     }
   },
   getRecored: async (id) => {
     if (props.dataSourceType === "DynamicTable") {
       return await GetDynamicTableRecored(props.dynamicTableId!, id);
     } else if (props.dataSourceType === "DynamicThirdPartyTable") {
-      return await unKnownFetch(props.dynamicThirdPartyTable.editUrl, { id });
+      return await unKnownFetch(props.dynamicThirdPartyTable.getDetailUrl, {
+        id,
+      });
     }
   },
   delRecored: async (id) => {
@@ -166,7 +168,7 @@ defineExpose({
       return await DelDynamicTableRecored(props.dynamicTableId!, id);
     } else if (props.dataSourceType === "DynamicThirdPartyTable") {
       return await unKnownFetch(
-        props.dynamicThirdPartyTable.editUrl,
+        props.dynamicThirdPartyTable.delUrl,
         { id },
         "post",
       );
