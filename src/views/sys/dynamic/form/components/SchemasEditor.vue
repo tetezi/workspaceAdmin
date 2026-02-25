@@ -23,7 +23,7 @@
                 <BasicButton :type="'info'" style="margin:5px">
                     独立类型
                 </BasicButton> -->
-                <Checkbox style="min-width: none;" v-model="preinstallFilter.category" isButton :options="[
+                <Checkbox style=" margin-right: 10px;" v-model="preinstallFilter.category"   :options="[
                     { label: '输入类型', value: 'Input' },
                     { label: '容器类型', value: 'Container' },
                     { label: '独立类型', value: 'Display' },

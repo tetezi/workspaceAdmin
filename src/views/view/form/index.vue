@@ -1,31 +1,3 @@
-<!--
- * @Author: tetezi MaHouShouJoTetezi@foxmail.com
- * @Date: 2024-09-05 09:56:15
- * @LastEditors: tetezi MaHouShouJoTetezi@foxmail.com
- * @LastEditTime: 2025-11-09 16:13:29
- * @FilePath: \workspaceAdmin\src\views\view\form\index.vue
- * @Description: 
- * a
- * b
--->
-<!--
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2024-09-05 09:56:15
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2025-11-09 15:24:10
- * @FilePath: \workspaceAdmin\src\views\view\form\index.vue
- * @Description: 
- * 
--->
-<!--
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2024-09-05 09:56:15
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2025-11-09 15:20:28
- * @FilePath: \workspaceAdmin\src\views\view\form\index.vue
- * @Description: 
- * 
--->
 <template>
   <div
     style="height: 100%; box-sizing: border-box; padding: 8px"
