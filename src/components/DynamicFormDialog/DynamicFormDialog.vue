@@ -7,7 +7,7 @@ import { GetDynamicForm, } from '@/api/sys/dynamic/form';
 
 import { useDialogForm } from 'ttz-ui';
 import { isFunction, isPlainObject, isString } from 'lodash';
-import { computed, markRaw, ref, unref, watchEffect } from 'vue';
+import { computed, h, markRaw, ref, unref, watchEffect } from 'vue';
 import type { DynamicFormSchemaType, DynamicFormType } from './types';
 import { dynamicUtils } from './dynamicUtils';
 import { EnumSelect } from '../EnumSelect';
@@ -50,8 +50,8 @@ const actialConfigRef = computed(() => {
                         return (formItemRenderParams) => {
                             let result = defaultValue
                             try {
-                                const func = new Function('renderParams', code)
-                                result = func.call({}, formItemRenderParams)
+                                const func = new Function('renderParams','h','unref', code)
+                                result = func.call({}, formItemRenderParams,h,unref)
                             } catch (error) {
                                 console.error(`JSCode运行异常:${(error as ReferenceError).message}`, {
                                     rawError: error, code, schema, configKey
@@ -82,8 +82,7 @@ const actialConfigRef = computed(() => {
             children: (schema.children || []).map(evalSchemaConfig),
             componentProps: evalSchemaAttributeConfig('componentProps', {}),
             componentStyle: evalSchemaAttributeConfig('componentStyle', {}),
-            componentRender: evalSchemaAttributeConfig('componentRender', {}),
-            render: evalSchemaAttributeConfig('render', undefined),
+            render: evalSchemaAttributeConfig('componentRender', undefined),
             componentSlot: evalSchemaAttributeConfig('componentSlot', undefined),
             colProps: schema.colProps,
         }
