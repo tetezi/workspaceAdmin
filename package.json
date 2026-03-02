@@ -24,7 +24,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "qs": "^6.12.1",
-    "ttz-ui": "^0.0.5",
+    "ttz-ui": "^0.0.8",
     "uuid": "^10.0.0",
     "vite-plugin-vue-devtools": "^7.4.6",
     "vue": "^3.4.38",
