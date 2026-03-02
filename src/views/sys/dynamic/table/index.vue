@@ -59,6 +59,7 @@ const [DialogFormComp, dialogFormMethods] = useDialogForm<any>({
                   { value: "DateTime", label: "日期时间" },
                   { value: "Enum", label: "枚举" },
                   { value: "SubTable", label: "子表" },
+                  { value: "Json", label: "Json" },
                 ],
                 onChange: (val) => {
                   if (val !== "SubTable") {
