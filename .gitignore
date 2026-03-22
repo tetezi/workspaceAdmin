@@ -11,6 +11,7 @@ node_modules
 .DS_Store
 dist
 distTest
+dist-electron
 dist-ssr
 coverage
 *.local
@@ -31,3 +32,5 @@ coverage
 *.tsbuildinfo
 
 /components.d.ts
+
+out/
