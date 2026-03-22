@@ -120,7 +120,7 @@ function onSubmitSchemaEditor(schema: DynamicFormSchemaType, meta) {
     const { type, currentKey } = meta 
     if (type === 'edit') {
         const node = unref(SchemasTreeRef)?.getNode(currentKey)
-        const children = node?.parent.data.children || node?.parent.data || []
+        const children = node?.parent!.data.children || node?.parent!.data || []
         const index = children.findIndex((d) => d.schemaKey === currentKey)
         if (index !== -1) {
             children.splice(index, 1, schema)

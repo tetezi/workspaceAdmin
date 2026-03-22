@@ -19,7 +19,7 @@ export enum ContentTypeEnum {
 export const handleSuccess: RequestHooks["thenHooks"] = async (
   res,
   axiosConfig,
-  requestOptions
+  requestOptions,
 ) => {
   const { successHandler } = requestOptions;
   async function successHandlerByTTZ(res: AxiosResponse) {
@@ -41,7 +41,7 @@ export function isCancelAxios(err: any): boolean {
 export const handleError: RequestHooks["catchHooks"] = async (
   error,
   axiosConfig,
-  requestOptions
+  requestOptions,
 ) => {
   const { errorHandler } = requestOptions;
   if (isFunction(errorHandler)) {
@@ -77,8 +77,11 @@ export const handleError: RequestHooks["catchHooks"] = async (
         return get(codeMsg, code, "发生未知错误，请联系管理员");
       }
     };
+    console.log("触发了401", error, error.response?.status);
     if (error.response?.status === 401) {
+      console.log("401重定向开始");
       router.replace(PAGE.login);
+      console.log("401重定向结束");
     }
     const errMessage = getErrorMsg(error);
     if (requestOptions.errorMessageMode === "message") {
@@ -89,7 +92,7 @@ export const handleError: RequestHooks["catchHooks"] = async (
           message: errMessage,
           error: omit(error, ["_errMessage"]),
         },
-        "error"
+        "error",
       );
     } else if (requestOptions.errorMessageMode === "log") {
       console.log(errMessage, error);
@@ -104,7 +107,7 @@ export const handleError: RequestHooks["catchHooks"] = async (
 export function handleCancelOfBefore(
   axiosConfig: AxiosRequestConfig,
   requestOptions: RequestOptions,
-  cancelMap: Map<string, { axiosConfig: AxiosRequestConfig; cancel: Canceler }>
+  cancelMap: Map<string, { axiosConfig: AxiosRequestConfig; cancel: Canceler }>,
 ): AxiosRequestConfig {
   const { cancelHistoryAxios } = requestOptions;
   if (cancelHistoryAxios) {
@@ -123,14 +126,14 @@ export function handleCancelOfBefore(
 }
 export function handleCancelOfFinally(
   requestOptions: RequestOptions,
-  cancelMap: Map<string, { axiosConfig: AxiosRequestConfig; cancel: Canceler }>
+  cancelMap: Map<string, { axiosConfig: AxiosRequestConfig; cancel: Canceler }>,
 ) {
   cancelMap.delete(requestOptions.key as string);
 }
 // get请求参数序列化
 export const handleParamsSerializer: RequestHooks["beforeHooks"] = (
   axiosConfig,
-  requestOptions
+  requestOptions,
 ) => {
   const { paramsSerializer } = requestOptions;
 
@@ -145,7 +148,7 @@ export const handleParamsSerializer: RequestHooks["beforeHooks"] = (
 export const handleResponsePath: RequestHooks["thenHooks"] = (
   res,
   _axiosConfig,
-  requestOptions
+  requestOptions,
 ) => {
   const { responsePath } = requestOptions;
   return responsePath ? get(res, responsePath) : res;
@@ -153,7 +156,7 @@ export const handleResponsePath: RequestHooks["thenHooks"] = (
 
 export const handleHeaders: RequestHooks["beforeHooks"] = (
   axiosConfig,
-  requestOptions
+  requestOptions,
 ) => {
   const { contentType, withToken } = requestOptions;
   if (contentType) {
@@ -164,7 +167,7 @@ export const handleHeaders: RequestHooks["beforeHooks"] = (
     set(
       axiosConfig,
       ["headers", "Authorization"],
-      `Bearer ${userStroe.getToken}`
+      `Bearer ${userStroe.getToken}`,
     );
   }
   return axiosConfig;
